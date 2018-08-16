@@ -7,12 +7,12 @@ from helpingMethods import generatingWeightMatrix_py
 
 
 class Hex_linear:
-    def __init__(self, lam=1., lr=1., tol=1e-5, logistic=False, ignoringIndex = 100, hex_start=100):
+    def __init__(self, lam=1., lr=1., tol=1e-10, logistic=False, ignoringIndex = 100, hex_start=100):
         self.lam = lam
         self.lr = lr
         self.tol = tol
         self.decay = 0.5
-        self.maxIter = 500
+        self.maxIter = 1000
         self.logistic = logistic
         self.hex_start = hex_start
         self.ignoringIndex = ignoringIndex
@@ -42,6 +42,8 @@ class Hex_linear:
 
             if step > self.hex_start:
                 W = generatingWeightMatrix_py(np.dot(X[:,self.ignoringIndex:], self.beta[self.ignoringIndex:]), y.reshape([y.shape[0], 1]))
+                # T = np.dot(X[:,self.ignoringIndex:], self.beta[self.ignoringIndex:])
+                # W_half = np.eye(shp[0]) - np.dot(T, np.dot(np.linalg.inv(np.dot(T.T, T)), T.T))
                 W_half = np.real(scialg.sqrtm(W))
                 Xproj = np.dot(W_half, X)
                 yproj = np.dot(W_half, y).reshape(y.shape[0])
@@ -61,19 +63,22 @@ class Hex_linear:
                 keepRunning = self.stopCheck(prev_beta, self.beta, pg, Xproj, yproj)
                 if keepRunning:
                     self.lr = self.decay * self.lr
-            step += 1
-            resi = self.cost(X, y)
 
-            print resi
+            # print self.beta.T
+
+            step += 1
+            resi = self.cost(Xproj, yproj)
+
+            print step, resi
         return self.beta
 
     def cost(self, X, y):
         if self.logistic:
             tmp = (np.dot(X, self.beta)).T
-            return -0.5 * np.sum(y*tmp - np.log(1+np.exp(tmp))) + self.lam * linalg.norm(
+            return -0.5 * np.mean(y*tmp - np.log(1+np.exp(tmp))) + self.lam * linalg.norm(
                 self.beta, ord=1)
         else:
-            return 0.5 * np.sum(np.square(y - np.dot(X, self.beta)).transpose()) + self.lam * linalg.norm(
+            return 0.5 * np.mean(np.square(y - np.dot(X, self.beta)).transpose()) + self.lam * linalg.norm(
                 self.beta, ord=1)
 
     def proximal_gradient(self, X, y):

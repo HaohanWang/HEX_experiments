@@ -8,51 +8,56 @@ from sklearn.metrics import mean_squared_error as mse
 
 from matplotlib import pyplot as plt
 
-n = 500
-p = 100
+n = 200
+p = 10
 k = 10
 e = 1
+corr = 0.8
 
 def generateData():
-    X1 = np.random.normal(size=[n, p])
-    X2 = np.zeros(shape=[n, p])
+    X1 = np.random.normal(size=[2*n, p])
+    X2 = np.random.normal(size=[2*n, p])
 
-    X2[:n/2, :] = (X1[:n/2, :] + np.random.normal(size=[n/2, p])*e)/(1+e)
+    X2[:int(n*corr), :] = X1[:int(n*corr), :]
 
     X = np.append(X1, X2, axis=1)
 
-    plt.imshow(X)
-    plt.show()
+    # plt.imshow(X)
+    # plt.show()
 
-    Xtr = X[:n/2, :]
-    Xte = X[n/2:, :]
+    Xtr = X[:n, :]
+    Xte = X[n:, :]
 
-    beta = np.random.random(k) + 1
+    beta1 = np.random.random(k) + 1
+    beta2 = np.random.random(k) + 1
 
-    ytr = np.dot(Xtr[:, p:p+k], beta) + np.random.normal(size=[n/2])
-    yte = np.dot(Xte[:,:k], beta) + np.random.normal(size=[n/2])
+    ytr = (np.dot(Xtr[:,:k], beta1) + np.dot(Xtr[:, p:p+k], beta2))/2 #+ np.random.normal(size=[n])
+    yte = np.dot(Xte[:,:k], beta1) #+ np.random.normal(size=[n])
 
     Z = np.random.normal(size=[n, 2*p])
-    Zte = np.dot(Z[:, p:p+k], beta) + np.random.normal(size=[n])
+    Zte = np.dot(Z[:, p:p+k], beta2) + np.random.normal(size=[n])
 
     return Xtr, Xte, ytr, yte, Z, Zte
 
+def predict(X, model):
+    beta = model.getBeta()[:p]
+    return np.dot(X[:,:p], beta)
 
 def run():
     Xtr, Xte, ytr, yte, Z, Zte = generateData()
 
     print '-----------------'
 
-    m = Lasso(lam=0, lr=0.5)
-    m.fit(Xtr[:, :p], ytr)
-    yte0 = m.predict(Xte[:,:p])
-    zte0 = m.predict(Z[:,:p])
+    m0 = Lasso(lam=0, lr=1)
+    m0.fit(Xtr[:, :p], ytr)
+    yte0 = m0.predict(Xte[:,:p])
+    zte0 = m0.predict(Z[:,:p])
 
     print '-----------------'
-    m = Lasso(lam=0, lr=0.5)
-    m.fit(Xtr, ytr)
-    yte1 = m.predict(Xte)
-    zte1 = m.predict(Z)
+    m1 = Lasso(lam=0, lr=1)
+    m1.fit(Xtr, ytr)
+    yte1 = predict(Xte, m1)
+    zte1 = predict(Z, m1)
     #
     # print '-----------------'
     #
@@ -62,10 +67,10 @@ def run():
 
     print '-----------------'
 
-    m = Hex_linear(hex_start = 100, ignoringIndex=p, lam=0, lr=0.5)
-    m.fit(Xtr, ytr)
-    yte3 = m.predict(Xte)
-    zte3 = m.predict(Z)
+    m3 = Hex_linear(hex_start = 300, ignoringIndex=p, lam=0, lr=1)
+    m3.fit(Xtr, ytr)
+    yte3 = predict(Xte, m3)
+    zte3 = predict(Z, m3)
 
     print '================'
     print '--------------'
@@ -81,8 +86,14 @@ def run():
     # print mse(yte, yte2)
     print mse(Zte, zte3)
     print '--------------'
+    print '================'
+    print '--------------'
+    print m0.getBeta()
+    print m1.getBeta()
+    print m3.getBeta()
+    print '--------------'
 
 if __name__ == '__main__':
-    np.random.seed(1)
+    np.random.seed(2)
 
     run()

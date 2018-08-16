@@ -5,12 +5,12 @@ from numpy import linalg
 
 
 class Lasso:
-    def __init__(self, lam=1., lr=1., tol=1e-5, logistic=False):
+    def __init__(self, lam=1., lr=1., tol=1e-10, logistic=False):
         self.lam = lam
         self.lr = lr
         self.tol = tol
         self.decay = 0.5
-        self.maxIter = 500
+        self.maxIter = 1000
         self.logistic = logistic
 
     def setLambda(self, lam):
@@ -48,16 +48,16 @@ class Lasso:
                     self.lr = self.decay * self.lr
             step += 1
             resi = self.cost(X, y)
-            print resi
+            print step, resi
         return self.beta
 
     def cost(self, X, y):
         if self.logistic:
             tmp = (np.dot(X, self.beta)).T
-            return -0.5 * np.sum(y*tmp - np.log(1+np.exp(tmp))) + self.lam * linalg.norm(
+            return -0.5 * np.mean(y*tmp - np.log(1+np.exp(tmp))) + self.lam * linalg.norm(
                 self.beta, ord=1)
         else:
-            return 0.5 * np.sum(np.square(y - np.dot(X, self.beta)).transpose()) + self.lam * linalg.norm(
+            return 0.5 * np.mean(np.square(y - np.dot(X, self.beta)).transpose()) + self.lam * linalg.norm(
                 self.beta, ord=1)
 
     def proximal_gradient(self, X, y):

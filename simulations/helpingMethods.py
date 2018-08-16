@@ -8,11 +8,12 @@ import scipy.optimize as opt
 
 def generatingWeightMatrix_py(X, y):
     factor, S, U = fitting_null_py(X, y)
-    print factor
-    W = np.linalg.pinv(np.dot(np.dot(U, np.diag(S)), U.T)*factor+np.eye(X.shape[0]))
+    # print factor
+    W = np.linalg.pinv(-np.dot(np.dot(U, np.diag(S)), U.T)*factor+np.eye(X.shape[0])) # todo: pay attention to the extra minus sign here
 
     # W = np.eye(X.shape[0])
-    # W = W/np.mean(W)  # this line was not there in the sentiment experiment
+    # W = columnWiseNormalize(W)
+    # W = columnWiseNormalize(W.T).T
 
     return np.float32(W)
 
@@ -32,17 +33,21 @@ def selectValues(Kva):
     r[n - 1] = Kva[n - 1]
     return r
 
+def columnWiseNormalize(X):
+    col_norm = 1.0/np.sqrt((1.0/X.shape[0])*np.diag(np.dot(X.T, X)))
+    return np.dot(X, np.diag(col_norm))
+
 def fitting_null_py(X, y):
     ldeltamin = -5
     ldeltamax = 5
     numintervals=500
 
-    # xmean = np.mean(X, 0)
-    # X = X - xmean
-    # xnorm = np.linalg.norm(X, ord=2, axis=0)
-    # X = X / xnorm
-    # ymean = np.mean(y, 0)
-    # y = y - ymean
+    X = columnWiseNormalize(X)
+    xmean = np.mean(X, 0)
+    X = X - xmean
+    y = columnWiseNormalize(y)
+    ymean = np.mean(y, 0)
+    y = y - ymean
     # ynorm = np.linalg.norm(y, ord=2, axis=0)
     # y = y / ynorm
 
@@ -50,7 +55,7 @@ def fitting_null_py(X, y):
 
     S, U = linalg.eigh(K)
 
-    S = selectValues(S)
+    # S = selectValues(S)
 
     Uy = scipy.dot(U.T, y)
 
@@ -63,7 +68,7 @@ def fitting_null_py(X, y):
     # nllmin = nllgrid.min()
     ldeltaopt_glob = ldeltagrid[nllgrid.argmin()]
 
-    # print ldeltaopt_glob,
+    print ldeltaopt_glob
     return np.float32(1.0/np.exp(ldeltaopt_glob)), S, U
 
 def nLLeval(ldelta, Uy, S, REML=False):
