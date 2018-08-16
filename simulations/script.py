@@ -6,6 +6,8 @@ from Lasso import Lasso
 
 from sklearn.metrics import mean_squared_error as mse
 
+from matplotlib import pyplot as plt
+
 n = 500
 p = 100
 k = 10
@@ -15,14 +17,17 @@ def generateData():
     X1 = np.random.normal(size=[n, p])
     X2 = np.zeros(shape=[n, p])
 
-    X2[:n/2, :] = X1[:n/2, :] + np.random.normal(size=[n/2, p])*e
+    X2[:n/2, :] = (X1[:n/2, :] + np.random.normal(size=[n/2, p])*e)/(1+e)
 
     X = np.append(X1, X2, axis=1)
+
+    plt.imshow(X)
+    plt.show()
 
     Xtr = X[:n/2, :]
     Xte = X[n/2:, :]
 
-    beta = np.random.random(k)
+    beta = np.random.random(k) + 1
 
     ytr = np.dot(Xtr[:, p:p+k], beta) + np.random.normal(size=[n/2])
     yte = np.dot(Xte[:,:k], beta) + np.random.normal(size=[n/2])
@@ -35,6 +40,13 @@ def generateData():
 
 def run():
     Xtr, Xte, ytr, yte, Z, Zte = generateData()
+
+    print '-----------------'
+
+    m = Lasso(lam=0, lr=0.5)
+    m.fit(Xtr[:, :p], ytr)
+    yte0 = m.predict(Xte[:,:p])
+    zte0 = m.predict(Z[:,:p])
 
     print '-----------------'
     m = Lasso(lam=0, lr=0.5)
@@ -57,12 +69,14 @@ def run():
 
     print '================'
     print '--------------'
+    print mse(yte, yte0)
     print mse(yte, yte1)
     # print mse(yte, yte2)
     print mse(yte, yte3)
     print '--------------'
     print '================'
     print '--------------'
+    print mse(Zte, zte0)
     print mse(Zte, zte1)
     # print mse(yte, yte2)
     print mse(Zte, zte3)
