@@ -46,54 +46,71 @@ def predict(X, model):
 def run():
     Xtr, Xte, ytr, yte, Z, Zte = generateData()
 
-    print '-----------------'
+    # print '-----------------'
 
     m0 = Lasso(lam=0, lr=1)
     m0.fit(Xtr[:, :p], ytr)
     yte0 = m0.predict(Xte[:,:p])
     zte0 = m0.predict(Z[:,:p])
 
-    print '-----------------'
+    # print '-----------------'
     m1 = Lasso(lam=0, lr=1)
     m1.fit(Xtr, ytr)
     yte1 = predict(Xte, m1)
     zte1 = predict(Z, m1)
     #
     # print '-----------------'
-    #
-    # m = Hex_linear(hex_start=0, ignoringIndex=p, lam=0, lr=1e0)
-    # m.fit(Xtr, ytr)
-    # yte2 = m.predict(Xte)
 
-    print '-----------------'
+    m2 = Hex_linear(hex_start=np.inf, ignoringIndex=p, lam=0, lr=1, project=True)
+    m2.fit(Xtr, ytr)
+    yte2 = predict(Xte, m2)
+    zte2 = predict(Z, m2)
 
-    m3 = Hex_linear(hex_start = 300, ignoringIndex=p, lam=0, lr=1)
+    # print '-----------------'
+
+    m3 = Hex_linear(hex_start = 1e3, ignoringIndex=p, lam=0, lr=1) #1e2 works OK
     m3.fit(Xtr, ytr)
     yte3 = predict(Xte, m3)
     zte3 = predict(Z, m3)
 
-    print '================'
-    print '--------------'
-    print mse(yte, yte0)
-    print mse(yte, yte1)
-    # print mse(yte, yte2)
-    print mse(yte, yte3)
-    print '--------------'
-    print '================'
-    print '--------------'
-    print mse(Zte, zte0)
-    print mse(Zte, zte1)
-    # print mse(yte, yte2)
-    print mse(Zte, zte3)
-    print '--------------'
-    print '================'
-    print '--------------'
-    print m0.getBeta()
-    print m1.getBeta()
-    print m3.getBeta()
-    print '--------------'
+    # print '================'
+    # print '--------------'
+    # print mse(yte, yte0)
+    # print mse(yte, yte1)
+    # # print mse(yte, yte2)
+    # print mse(yte, yte3)
+    # print '--------------'
+    # print '================'
+    # print '--------------'
+    # print mse(Zte, zte0)
+    # print mse(Zte, zte1)
+    # # print mse(yte, yte2)
+    # print mse(Zte, zte3)
+    # print '--------------'
+    # print '================'
+    # print '--------------'
+    # print m0.getBeta()
+    # print m1.getBeta()
+    # print m3.getBeta()
+    # print '--------------'
+
+    a0 = mse(yte, yte0)
+    a1 = mse(yte, yte1)
+    a2 = mse(yte, yte2)
+    a3 = mse(yte, yte3)
+
+    b0 = mse(Zte, zte0)
+    b1 = mse(Zte, zte1)
+    b2 = mse(Zte, zte2)
+    b3 = mse(Zte, zte3)
+
+    return a0, a1, a2, a3, b0, b1, b2, b3
 
 if __name__ == '__main__':
-    np.random.seed(2)
-
-    run()
+    for seed in range(10):
+        np.random.seed(seed)
+        print 'Seed', seed, '\t',
+        m = run()
+        for a in m:
+            print a, '\t',
+        print

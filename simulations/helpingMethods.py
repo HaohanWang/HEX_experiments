@@ -68,7 +68,7 @@ def fitting_null_py(X, y):
     # nllmin = nllgrid.min()
     ldeltaopt_glob = ldeltagrid[nllgrid.argmin()]
 
-    print ldeltaopt_glob
+    # print ldeltaopt_glob
     return np.float32(1.0/np.exp(ldeltaopt_glob)), S, U
 
 def nLLeval(ldelta, Uy, S, REML=False):

@@ -7,7 +7,7 @@ from helpingMethods import generatingWeightMatrix_py
 
 
 class Hex_linear:
-    def __init__(self, lam=1., lr=1., tol=1e-10, logistic=False, ignoringIndex = 100, hex_start=100):
+    def __init__(self, lam=1., lr=1., tol=1e-10, logistic=False, ignoringIndex = 100, hex_start=100, project=False):
         self.lam = lam
         self.lr = lr
         self.tol = tol
@@ -16,6 +16,7 @@ class Hex_linear:
         self.logistic = logistic
         self.hex_start = hex_start
         self.ignoringIndex = ignoringIndex
+        self.project = project
 
     def setLambda(self, lam):
         self.lam = lam
@@ -38,13 +39,17 @@ class Hex_linear:
         resi_prev = np.inf
         resi = self.cost(X, y)
         step = 0
+        hex_flag = False
         while np.abs(resi_prev - resi) > self.tol and step < self.maxIter:
 
-            if step > self.hex_start:
-                W = generatingWeightMatrix_py(np.dot(X[:,self.ignoringIndex:], self.beta[self.ignoringIndex:]), y.reshape([y.shape[0], 1]))
-                # T = np.dot(X[:,self.ignoringIndex:], self.beta[self.ignoringIndex:])
-                # W_half = np.eye(shp[0]) - np.dot(T, np.dot(np.linalg.inv(np.dot(T.T, T)), T.T))
-                W_half = np.real(scialg.sqrtm(W))
+            if hex_flag or (self.project and step>0):
+                if not self.project:
+                    W = generatingWeightMatrix_py(np.dot(X[:,self.ignoringIndex:], self.beta[self.ignoringIndex:]), y.reshape([y.shape[0], 1]))
+                    W_half = np.real(scialg.sqrtm(W))
+                else:
+                    T = np.dot(X[:,self.ignoringIndex:], self.beta[self.ignoringIndex:])
+                    W_half = np.eye(shp[0]) - np.dot(T, np.dot(np.linalg.inv(np.dot(T.T, T)), T.T))
+
                 Xproj = np.dot(W_half, X)
                 yproj = np.dot(W_half, y).reshape(y.shape[0])
             else:
@@ -69,7 +74,10 @@ class Hex_linear:
             step += 1
             resi = self.cost(Xproj, yproj)
 
-            print step, resi
+            if (np.abs(resi_prev - resi)<self.hex_start) and (not self.project):
+                hex_flag = True
+
+            # print step, resi
         return self.beta
 
     def cost(self, X, y):

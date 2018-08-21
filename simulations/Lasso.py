@@ -48,7 +48,7 @@ class Lasso:
                     self.lr = self.decay * self.lr
             step += 1
             resi = self.cost(X, y)
-            print step, resi
+            # print step, resi
         return self.beta
 
     def cost(self, X, y):
