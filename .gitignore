@@ -2,3 +2,7 @@
 *.pyc
 *.npy
 data/*
+*.txt
+*.png
+*status*
+*.log
