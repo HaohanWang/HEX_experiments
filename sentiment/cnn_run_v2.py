@@ -137,7 +137,7 @@ def train(args, Xtrain, Xtrain_re,Xtrain_d,Ytrain, Xval,Xval_re, Xval_d, Yval, X
                     batch_y = Ytrain[i*args.batch_size:(i+1)*args.batch_size,:]
 
                     # _, acc = sess.run([optimizer, model.accuracy], feed_dict={x: batch_x, x_re: batch_re,x_d: batch_xd, y: batch_y, model.keep_prob: 0.5, model.e: epoch,model.batch: i})
-                    if epoch < args.div:
+                    if epoch < 1000:
                         _, acc, loss = sess.run([first_train_op, model.accuracy, model.loss], feed_dict={x: batch_x, x_re: batch_re,x_d: batch_xd, y: batch_y, model.keep_prob: 0.5, model.e: epoch,model.batch: i})
                     else:
                         _, acc, loss = sess.run([second_train_op, model.accuracy, model.loss], feed_dict={x: batch_x, x_re: batch_re,x_d: batch_xd, y: batch_y, model.keep_prob: 0.5, model.e: epoch,model.batch: i})
