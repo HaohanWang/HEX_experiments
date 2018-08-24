@@ -33,44 +33,44 @@ def generatingWeightMatrix_py(X, y, epoch, division, batch):
         #
         # for i in range(10):
         #     print np.mean(X[i,:]), np.where(y[i]==1)[0]
-        if len(Wlist) == batch: #todo: let's try to change modelling power
+        # if len(Wlist) == batch: #todo: let's try to change modelling power
+        #
+        #     factor, S, U = fitting_null_py(X, y)
+        #     W = np.linalg.inv(np.dot(np.dot(U, np.diag(S)), U.T)*factor+np.eye(X.shape[0]))
+        #
+        #     # W = np.eye(X.shape[0])
+        #     # W = W/np.mean(W)  # this line was not there in the sentiment experiment
+        #
+        #     # W = columnWiseNormalize(W)
+        #     # W = columnWiseNormalize(W.T).T
+        #
+        #     # W = np.diag(np.diag(W))
+        #
+        #     # W = np.eye(X.shape[0]) - np.dot(X, np.dot(np.linalg.inv(np.dot(X.T, X)), X.T))
+        #     # W = columnWiseNormalize(W)
+        #     # W = columnWiseNormalize(W.T).T
+        #     #
+        #
+        #     Wlist.append(W)
+        #
+        # return np.float32(Wlist[batch])
 
-            factor, S, U = fitting_null_py(X, y)
-            W = np.linalg.inv(np.dot(np.dot(U, np.diag(S)), U.T)*factor+np.eye(X.shape[0]))
 
-            # W = np.eye(X.shape[0])
-            # W = W/np.mean(W)  # this line was not there in the sentiment experiment
-
-            # W = columnWiseNormalize(W)
-            # W = columnWiseNormalize(W.T).T
-
-            # W = np.diag(np.diag(W))
-
-            # W = np.eye(X.shape[0]) - np.dot(X, np.dot(np.linalg.inv(np.dot(X.T, X)), X.T))
-            # W = columnWiseNormalize(W)
-            # W = columnWiseNormalize(W.T).T
-            #
-
-            Wlist.append(W)
-
-        return np.float32(Wlist[batch])
-
-
-        # factor, S, U = fitting_null_py(X, y)
-        # W = np.linalg.inv(np.dot(np.dot(U, np.diag(S)), U.T)*factor+np.eye(X.shape[0]))
-        # # #
-        # # # # W = np.eye(X.shape[0])
-        # # # # W = W/np.mean(W)
-        # # #
+        factor, S, U = fitting_null_py(X, y)
+        W = np.linalg.inv(np.dot(np.dot(U, np.diag(S)), U.T)*factor+np.eye(X.shape[0]))
+        # #
+        # # # W = np.eye(X.shape[0])
+        # # # W = W/np.mean(W)
+        # #
+        # # W = columnWiseNormalize(W)
+        # # W = columnWiseNormalize(W.T).T
+        # #
+        # X = X.reshape([X.shape[0], 1])
+        # W = np.eye(X.shape[0]) - np.dot(X, np.dot(np.linalg.inv(np.dot(X.T, X)), X.T))
         # # # W = columnWiseNormalize(W)
         # # # W = columnWiseNormalize(W.T).T
-        # # #
-        # # X = X.reshape([X.shape[0], 1])
-        # # W = np.eye(X.shape[0]) - np.dot(X, np.dot(np.linalg.inv(np.dot(X.T, X)), X.T))
-        # # # # W = columnWiseNormalize(W)
-        # # # # W = columnWiseNormalize(W.T).T
-        # #
-        # return np.float32(W)
+        #
+        return np.float32(W)
 
 def rescale(a):
     return a / np.max(np.abs(a))
