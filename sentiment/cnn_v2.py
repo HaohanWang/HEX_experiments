@@ -15,8 +15,8 @@ def generatingWeightMatrix(images, labels, epoch, division, batch):
     W = py_func(generatingWeightMatrix_py, [images, labels, epoch, division, batch], [tf.float32])[0]
     return W
 
-def checkInformation(rep, epoch):
-    X = py_func(checkInformation_py, [rep, epoch], [tf.float32])[0]
+def checkInformation(rep, epoch, s):
+    X = py_func(checkInformation_py, [rep, epoch, s], [tf.float32])[0]
     return X
 
 def weight_variable(shape):
@@ -102,12 +102,16 @@ class MNISTcnn(object):
             pad=tf.zeros_like(glgcm_h_fc1, tf.float32)
             yconv_contact_pred=tf.concat([h_fc1_drop, pad],1)
 
+            pad2 = tf.zeros_like(h_fc1, tf.float32)
+            yconv_contact_H = tf.concat([pad2, glgcm_h_fc1],1)
+
             # fc2
             with tf.variable_scope("fc2"):
                 W_fc2 = weight_variable([1056, 7])
                 b_fc2 = bias_variable([7])
                 y_conv_loss = tf.matmul(yconv_contact_loss, W_fc2) + b_fc2
                 y_conv_pred = tf.matmul(yconv_contact_pred, W_fc2) + b_fc2
+                y_conv_H = tf.matmul(yconv_contact_H, W_fc2) + b_fc2
             ######################################Sentiment######################
 
             """
@@ -119,7 +123,8 @@ class MNISTcnn(object):
 
             H = tf.stack(t_histo_rows, axis=0)
             """
-        # H = y_conv_loss
+        # H = y_conv_H
+
         sess_loss=tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=self.y, logits=y_conv_loss))
         if Hex_flag==False:
             if conf.re==1:
@@ -128,6 +133,13 @@ class MNISTcnn(object):
             else:
                  self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=self.y, logits=y_conv_loss))
         self.pred = tf.argmax(y_conv_pred, 1)
+
+        # H = y_conv_H
+        # H = tf.argmax(y_conv_H, 1)
+
+
+        # y_conv_pred = checkInformation(y_conv_pred, self.e, 'hey')
+        # H = checkInformation(H, self.e, 'ha')
 
         self.correct_prediction = tf.equal(tf.argmax(y_conv_pred,1), tf.argmax(self.y,1))
         self.accuracy = tf.reduce_mean(tf.cast(self.correct_prediction, tf.float32))

@@ -5,10 +5,10 @@ import os
 
 import numpy as np
 
-background_path = '/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/background/'
-face_path = '/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/original/'
-# background_path = '../images/background/'
-#face_path = '/media/haohanwang/Info/SentimentImages/original/'
+# background_path = '/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/background/'
+# face_path = '/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/original/'
+background_path = '../images/background/'
+face_path = '/media/haohanwang/Info/SentimentImages/original/'
 
 sentiment_dic = {'anger': 0, 'disgust': 1, 'fear': 2, 'joy': 3, 'neutral': 4, 'sadness': 5, 'surprise': 6}
 background_dic = {0: 'drawn.jpg', 1: 'festival.jpg', 2: 'firework.jpg', 3: 'forest.jpg', 4: 'scare.jpg', 5: 'train.jpg', 6: 'winter.jpg'}
@@ -125,8 +125,8 @@ def add_image(facepath, bgps, sent, corr, save_path):
         img_mix = left(img1,img2)
     if x == 2:
         img_mix = right(img1,img2)
-    img_mix=cv2.cvtColor(img_mix,cv2.COLOR_RGB2GRAY)
-    img_mix=cv2.resize(img_mix,(28,28),interpolation=cv2.INTER_CUBIC)
+    # img_mix=cv2.cvtColor(img_mix,cv2.COLOR_RGB2GRAY)
+    # img_mix=cv2.resize(img_mix,(28,28),interpolation=cv2.INTER_CUBIC)
     cv2.imwrite(savepath, img_mix)
     #print savepath
     return
@@ -152,8 +152,8 @@ def run(corr=0.8):
         c= 8
     """
     c=int(corr*10)
-    save_path = '/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/background_'+str(c) + '/'
-    #save_path = '/media/haohanwang/Info/SentimentImages/background_'+str(c) + '/'
+    # save_path = '/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/background_'+str(c) + '/'
+    save_path = '/media/haohanwang/Info/SentimentImages/background_'+str(c) + '/'
     print save_path
     for n in names:
         for k in sentiment_dic:
@@ -171,12 +171,11 @@ def run(corr=0.8):
 
 
 if __name__ == '__main__':
-    """
-    corr=0.1
+    np.random.seed(0)
+    corr=0.0
     while corr<=1.0:
+        print 'WE ARE WORKING ON', corr
         if corr!=0.8:
             run(corr=corr)
         corr+=0.1
-    """
-    run(corr=1.0)
-        #run(corr=corr)
+    # run(corr=0.8)

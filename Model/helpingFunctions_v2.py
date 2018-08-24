@@ -8,10 +8,10 @@ import scipy.optimize as opt
 
 Wlist = []
 
-def checkInformation_py(X, epoch):
+def checkInformation_py(X, epoch, s):
     if epoch > 0:
         # print X.shape
-        print np.linalg.matrix_rank(X)
+        print X[0,:], s
     return np.float32(X)
 
 def generatingWeightMatrix_py(X, y, epoch, division, batch):
@@ -46,7 +46,7 @@ def generatingWeightMatrix_py(X, y, epoch, division, batch):
 
             # W = np.diag(np.diag(W))
 
-            # W = np.eye(X.shape[0]) - np.dot(X, np.dot(np.linalg.inv(np.dot(X.T, X) + 1e-10*np.eye(X.shape[1])), X.T))
+            # W = np.eye(X.shape[0]) - np.dot(X, np.dot(np.linalg.inv(np.dot(X.T, X)), X.T))
             # W = columnWiseNormalize(W)
             # W = columnWiseNormalize(W.T).T
             #
@@ -58,16 +58,17 @@ def generatingWeightMatrix_py(X, y, epoch, division, batch):
 
         # factor, S, U = fitting_null_py(X, y)
         # W = np.linalg.inv(np.dot(np.dot(U, np.diag(S)), U.T)*factor+np.eye(X.shape[0]))
-        # #
-        # # # W = np.eye(X.shape[0])
-        # # # W = W/np.mean(W)
-        # #
-        # # W = columnWiseNormalize(W)
-        # # W = columnWiseNormalize(W.T).T
-        # #
-        # # # W = np.eye(X.shape[0]) - np.dot(X, np.dot(np.linalg.inv(np.dot(X.T, X) + 1e-10*np.eye(X.shape[1])), X.T))
+        # # #
+        # # # # W = np.eye(X.shape[0])
+        # # # # W = W/np.mean(W)
+        # # #
         # # # W = columnWiseNormalize(W)
         # # # W = columnWiseNormalize(W.T).T
+        # # #
+        # # X = X.reshape([X.shape[0], 1])
+        # # W = np.eye(X.shape[0]) - np.dot(X, np.dot(np.linalg.inv(np.dot(X.T, X)), X.T))
+        # # # # W = columnWiseNormalize(W)
+        # # # # W = columnWiseNormalize(W.T).T
         # #
         # return np.float32(W)
 
@@ -104,6 +105,7 @@ def fitting_null_py(X, y):
     ldeltamax = 5
     numintervals=500
 
+    # X = X.reshape([X.shape[0], 1])
     X = columnWiseNormalize(X)
     xmean = np.mean(X, 0)
     X = X - xmean
@@ -121,6 +123,7 @@ def fitting_null_py(X, y):
     S, U = linalg.eigh(K)
 
     # S = selectValues(S)
+    # print S
     #
     # print np.linalg.matrix_rank(K)
     #
@@ -142,7 +145,7 @@ def fitting_null_py(X, y):
     # nllmin = nllgrid.min()
     ldeltaopt_glob = ldeltagrid[nllgrid.argmin()]
 
-    # print ldeltaopt_glob,
+    print ldeltaopt_glob,
     return np.float32(1.0/np.exp(ldeltaopt_glob)), S, U
 
 def nLLeval(ldelta, Uy, S, REML=False):

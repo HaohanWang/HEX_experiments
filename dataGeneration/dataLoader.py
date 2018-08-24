@@ -26,7 +26,7 @@ def loadData(seed, n, p, group):
     return Xtrain, Ytrain, Xval, Yval, Xtest, Ytest
 
 
-def organizeSentimentData(filePath='/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/background_8/'):
+def organizeSentimentData(loadFilePath='/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/background_8/', saveFilePath=None):
     small = True
 
     import os
@@ -48,7 +48,7 @@ def organizeSentimentData(filePath='/Users/hzxue/Desktop/CMU/project/artificial-
     count = 0
     for n in names:
         for k in sentiment_dic:
-            filepath = filePath + n + '/' + n + '_' + k + '/'
+            filepath = loadFilePath + n + '/' + n + '_' + k + '/'
             for r, d, f in os.walk(filepath):
                 for fn in f:
                     try:
@@ -56,7 +56,10 @@ def organizeSentimentData(filePath='/Users/hzxue/Desktop/CMU/project/artificial-
                         count += 1
                         if count % 1000 == 0:
                             print 'finish', count, 'images'
-                        im = cv2.imread(filepath + fn, 0)
+                        im = cv2.imread(filepath + fn, cv2.IMREAD_UNCHANGED)
+                        im=cv2.cvtColor(im,cv2.COLOR_RGB2GRAY)
+                        im=cv2.resize(im,(28,28),interpolation=cv2.INTER_CUBIC)
+
                         ind = int(fn.split('_')[-1].split('.')[0])
                         if ind % 10 < 5:
                             train.append(im.reshape(28*28))
@@ -81,19 +84,19 @@ def organizeSentimentData(filePath='/Users/hzxue/Desktop/CMU/project/artificial-
     teL = np.array(teL)
 
     if small:
-        np.save(filePath + 'trainData_small', train)
-        np.save(filePath + 'trainLabel_small_onehot', trL)
-        np.save(filePath + 'valData_small', val)
-        np.save(filePath + 'valLabel_small_onehot', valL)
-        np.save(filePath + 'testData_small', test)
-        np.save(filePath + 'testLabel_small_onehot', teL)
+        np.save(saveFilePath + 'trainData_small', train)
+        np.save(saveFilePath + 'trainLabel_small_onehot', trL)
+        np.save(saveFilePath + 'valData_small', val)
+        np.save(saveFilePath + 'valLabel_small_onehot', valL)
+        np.save(saveFilePath + 'testData_small', test)
+        np.save(saveFilePath + 'testLabel_small_onehot', teL)
     else:
-        np.save(filePath + 'trainData', train)
-        np.save(filePath + 'trainLabel', trL)
-        np.save(filePath + 'valData', val)
-        np.save(filePath + 'valLabel', valL)
-        np.save(filePath + 'testData', test)
-        np.save(filePath + 'testLabel', teL)
+        np.save(saveFilePath + 'trainData', train)
+        np.save(saveFilePath + 'trainLabel', trL)
+        np.save(saveFilePath + 'valData', val)
+        np.save(saveFilePath + 'valLabel', valL)
+        np.save(saveFilePath + 'testData', test)
+        np.save(saveFilePath + 'testLabel', teL)
 
 def loadDataSentimentDiffLabel(corr=0.8):
     #dataPath = '/media/haohanwang/Info/SentimentImages/background_8/'
@@ -184,7 +187,7 @@ def loadDataMNIST():
 
 if __name__ == '__main__':
     
-    corr=10
+    corr=8
     #loadDataSentimentDiffLabel(corr=0.0)
     #loadDataSentiment(corr=0.8)
     """
@@ -192,4 +195,7 @@ if __name__ == '__main__':
         filePath='/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/background_'+str(corr)+'/'
         organizeSentimentData(filePath=filePath)
         corr+=1
-    """    
+    """
+    loadPath='/media/haohanwang/Info/SentimentImages/background_'+str(corr) + '/'
+    savePath='../data/background_npy/npy_'+str(corr)+'/'
+    organizeSentimentData(loadFilePath=loadPath, saveFilePath=savePath)

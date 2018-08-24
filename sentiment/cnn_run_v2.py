@@ -90,7 +90,7 @@ def train(args, Xtrain, Xtrain_re,Xtrain_d,Ytrain, Xval,Xval_re, Xval_d, Yval, X
         model = MNISTcnn(x, y, x_re, x_d, args, Hex_flag=use_hex)
 
         # optimizer = tf.train.AdamOptimizer(1e-4).minimize(model.loss)
-        optimizer = tf.train.AdamOptimizer(1e-3)
+        optimizer = tf.train.AdamOptimizer(5e-4)
         first_train_op = optimizer.minimize(model.loss)
         second_train_vars=tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"hex")
         second_train_op = optimizer.minimize(model.loss, var_list=second_train_vars)
