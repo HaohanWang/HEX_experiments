@@ -61,7 +61,7 @@ class MNISTcnn(object):
        
         #####################################glgcm############################
         ######################################hex#############################
-        H = glgcm_h_fc1
+        # H = glgcm_h_fc1
         ######################################hex############################
 
         ######################################Sentiment######################
@@ -136,7 +136,7 @@ class MNISTcnn(object):
 
         # H = y_conv_H
         # H = tf.argmax(y_conv_H, 1)
-
+        # y_H = tf.one_hot(H, depth=7)
 
         # y_conv_pred = checkInformation(y_conv_pred, self.e, 'hey')
         # H = checkInformation(H, self.e, 'ha')
@@ -144,14 +144,21 @@ class MNISTcnn(object):
         self.correct_prediction = tf.equal(tf.argmax(y_conv_pred,1), tf.argmax(self.y,1))
         self.accuracy = tf.reduce_mean(tf.cast(self.correct_prediction, tf.float32))
         if Hex_flag:
-            loss = tf.sqrt(tf.reshape(tf.cast(tf.nn.softmax_cross_entropy_with_logits(labels=self.y, logits=y_conv_loss), tf.float32), [-1, 1]) + 1e-10)
+            # loss = tf.sqrt(tf.reshape(tf.cast(tf.nn.softmax_cross_entropy_with_logits(labels=self.y, logits=y_conv_loss), tf.float32), [-1, 1]) + 1e-10)
 
-            W = generatingWeightMatrix(H, self.y, self.e, conf.div, self.batch)
-            tf.stop_gradient(W)
-            if conf.re==1:
-                sess_loss = tf.matmul(tf.matmul(loss, W, transpose_a=True), loss)
+            # y_conv_loss = generatingWeightMatrix(y_conv_H, y_conv_loss, self.e, conf.div, self.batch)
 
-                tf.add_to_collection("losses",tf.reshape(sess_loss,[]))
-                self.loss = tf.add_n(tf.get_collection("losses"))
-            else:
-                self.loss=tf.matmul(tf.matmul(loss, W, transpose_a=True), loss)
+            y_conv_loss = y_conv_loss - tf.matmul(tf.matmul(tf.matmul(y_conv_H, tf.matrix_inverse(tf.matmul(y_conv_H, y_conv_H, transpose_a=True))), y_conv_H, transpose_b=True), y_conv_loss)
+
+            self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=self.y, logits=y_conv_loss))
+
+            # self.loss = tf.reduce_mean(tf.multiply(W, tf.cast(tf.nn.softmax_cross_entropy_with_logits(labels=self.y, logits=y_conv_loss), tf.float32)))
+
+            # tf.stop_gradient(W)
+            # if conf.re==1:
+            #     sess_loss = tf.matmul(tf.matmul(loss, W, transpose_a=True), loss)
+            #
+            #     tf.add_to_collection("losses",tf.reshape(sess_loss,[]))
+            #     self.loss = tf.add_n(tf.get_collection("losses"))
+            # else:
+            #     self.loss=tf.matmul(tf.matmul(loss, W, transpose_a=True), loss)

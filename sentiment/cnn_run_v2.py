@@ -136,11 +136,11 @@ def train(args, Xtrain, Xtrain_re,Xtrain_d,Ytrain, Xval,Xval_re, Xval_d, Yval, X
                     batch_re = Xtrain_re[i*args.batch_size:(i+1)*args.batch_size,:]
                     batch_y = Ytrain[i*args.batch_size:(i+1)*args.batch_size,:]
 
-                    # _, acc = sess.run([optimizer, model.accuracy], feed_dict={x: batch_x, x_re: batch_re,x_d: batch_xd, y: batch_y, model.keep_prob: 0.5, model.e: epoch,model.batch: i})
-                    if epoch < 1000:
-                        _, acc, loss = sess.run([first_train_op, model.accuracy, model.loss], feed_dict={x: batch_x, x_re: batch_re,x_d: batch_xd, y: batch_y, model.keep_prob: 0.5, model.e: epoch,model.batch: i})
-                    else:
-                        _, acc, loss = sess.run([second_train_op, model.accuracy, model.loss], feed_dict={x: batch_x, x_re: batch_re,x_d: batch_xd, y: batch_y, model.keep_prob: 0.5, model.e: epoch,model.batch: i})
+                    _, acc, loss = sess.run([first_train_op, model.accuracy, model.loss], feed_dict={x: batch_x, x_re: batch_re,x_d: batch_xd, y: batch_y, model.keep_prob: 0.5, model.e: epoch,model.batch: i})
+                    # if epoch < args.div:
+                    #     _, acc, loss = sess.run([first_train_op, model.accuracy, model.loss], feed_dict={x: batch_x, x_re: batch_re,x_d: batch_xd, y: batch_y, model.keep_prob: 0.5, model.e: epoch,model.batch: i})
+                    # else:
+                    #     _, acc, loss = sess.run([second_train_op, model.accuracy, model.loss], feed_dict={x: batch_x, x_re: batch_re,x_d: batch_xd, y: batch_y, model.keep_prob: 0.5, model.e: epoch,model.batch: i})
 
                     # if i%5!=4:
                     #     print (acc, end='\t')
@@ -168,9 +168,9 @@ def train(args, Xtrain, Xtrain_re,Xtrain_d,Ytrain, Xval,Xval_re, Xval_d, Yval, X
                     val_acc_mean = np.mean(val_accuracies)
                     val_acc.append(val_acc_mean)
                     # log progress to console
-                    print("Epoch %d, time = %ds, train accuracy = %.4f, loss = %.4f,  validation accuracy = %.4f" % (epoch, time.time()-begin, train_acc_mean,  train_loss_mean, val_acc_mean))
+                    print("\nEpoch %d, time = %ds, train accuracy = %.4f, loss = %.4f,  validation accuracy = %.4f" % (epoch, time.time()-begin, train_acc_mean,  train_loss_mean, val_acc_mean))
                 else:
-                    print("Epoch %d, time = %ds, train accuracy = %.4f" % (epoch, time.time()-begin, train_acc_mean))
+                    print("\nEpoch %d, time = %ds, train accuracy = %.4f" % (epoch, time.time()-begin, train_acc_mean))
                 sys.stdout.flush()
 
                 #test
@@ -330,7 +330,7 @@ def main(args):
                                                 Xtest, Xtest_re, Xtest_d, Ytest,
                                                 corr, False)
         acc=np.array((n_train_acc,n_val_acc,n_test_acc))
-        np.save(args.save+'acc_'+str(args.corr)+'_'+str(args.row)+'_'+str(args.col)++'_'+str(args.div)+'.npy',acc)
+        np.save(args.save+'acc_'+str(args.corr)+'_'+str(args.row)+'_'+str(args.col)+'_'+str(args.div)+'.npy',acc)
     #draw_all(h_train_acc,h_val_acc,h_test_acc,n_train_acc,n_val_acc,n_test_acc,corr)
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

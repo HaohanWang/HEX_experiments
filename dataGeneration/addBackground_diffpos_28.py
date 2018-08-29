@@ -8,7 +8,7 @@ import numpy as np
 # background_path = '/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/background/'
 # face_path = '/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/original/'
 background_path = '../images/background/'
-face_path = '/media/haohanwang/Info/SentimentImages/original/'
+face_path = '/media/haohanwang/Data/SentimentImages/original/'
 
 sentiment_dic = {'anger': 0, 'disgust': 1, 'fear': 2, 'joy': 3, 'neutral': 4, 'sadness': 5, 'surprise': 6}
 background_dic = {0: 'drawn.jpg', 1: 'festival.jpg', 2: 'firework.jpg', 3: 'forest.jpg', 4: 'scare.jpg', 5: 'train.jpg', 6: 'winter.jpg'}
@@ -153,7 +153,7 @@ def run(corr=0.8):
     """
     c=int(corr*10)
     # save_path = '/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/background_'+str(c) + '/'
-    save_path = '/media/haohanwang/Info/SentimentImages/background_'+str(c) + '/'
+    save_path = '/media/haohanwang/Data/SentimentImages/background_'+str(c) + '/'
     print save_path
     for n in names:
         for k in sentiment_dic:
@@ -171,11 +171,35 @@ def run(corr=0.8):
 
 
 if __name__ == '__main__':
-    np.random.seed(0)
-    corr=0.0
-    while corr<=1.0:
-        print 'WE ARE WORKING ON', corr
-        if corr!=0.8:
-            run(corr=corr)
-        corr+=0.1
+    # np.random.seed(0)
+    # corr=0.0
+    # while corr<=1.0:
+    #     print 'WE ARE WORKING ON', corr
+    #     if corr!=0.8:
+    #         run(corr=corr)
+    #     corr+=0.1
     # run(corr=0.8)
+    np.random.seed(0)
+    print 'WE ARE WORKING ON', 0.1
+    run(corr=0.1)
+    np.random.seed(0)
+    print 'WE ARE WORKING ON', 0.2
+    run(corr=0.2)
+    np.random.seed(0)
+    print 'WE ARE WORKING ON', 0.3
+    run(corr=0.3)
+    np.random.seed(0)
+    print 'WE ARE WORKING ON', 0.4
+    run(corr=0.4)
+    np.random.seed(0)
+    print 'WE ARE WORKING ON', 0.5
+    run(corr=0.5)
+    np.random.seed(0)
+    print 'WE ARE WORKING ON', 0.6
+    run(corr=0.6)
+    np.random.seed(0)
+    print 'WE ARE WORKING ON', 0.7
+    run(corr=0.7)
+    np.random.seed(0)
+    print 'WE ARE WORKING ON', 0.9
+    run(corr=0.9)

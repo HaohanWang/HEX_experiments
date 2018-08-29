@@ -187,15 +187,15 @@ def loadDataMNIST():
 
 if __name__ == '__main__':
     
-    corr=8
+    corr=0
     #loadDataSentimentDiffLabel(corr=0.0)
     #loadDataSentiment(corr=0.8)
-    """
     while corr<=10:
-        filePath='/Users/hzxue/Desktop/CMU/project/artificial-pattern/data/background_'+str(corr)+'/'
-        organizeSentimentData(filePath=filePath)
+        print corr
+        loadPath='/media/haohanwang/Data/SentimentImages/background_'+str(corr) + '/'
+        savePath='../data/background_npy/npy_'+str(corr)+'/'
+        organizeSentimentData(loadFilePath=loadPath, saveFilePath=savePath)
         corr+=1
-    """
-    loadPath='/media/haohanwang/Info/SentimentImages/background_'+str(corr) + '/'
-    savePath='../data/background_npy/npy_'+str(corr)+'/'
-    organizeSentimentData(loadFilePath=loadPath, saveFilePath=savePath)
+    # loadPath='/media/haohanwang/Info/SentimentImages/background_'+str(corr) + '/'
+    # savePath='../data/background_npy/npy_'+str(corr)+'/'
+    # organizeSentimentData(loadFilePath=loadPath, saveFilePath=savePath)
