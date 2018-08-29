@@ -202,12 +202,20 @@ if __name__ == '__main__':
     print amazon_surf.shape
     print dslr_surf.shape
 
+    print webcam_feature.shape
+    print amazon_feature.shape
+    print dslr_feature.shape
+
+    print webcam_label.shape
+    print amazon_label.shape
+    print dslr_label.shape
+
     np.save('../data/office/webcam_surf', webcam_surf)
     np.save('../data/office/webcam_glgcm', webcam_feature)
     np.save('../data/office/webcam_label', webcam_label)
-    np.save('../data/office/amazon_surf', webcam_surf)
-    np.save('../data/office/amazon_glgcm', webcam_feature)
-    np.save('../data/office/amazon_label', webcam_label)
-    np.save('../data/office/dslr_surf', webcam_surf)
-    np.save('../data/office/dslr_glgcm', webcam_feature)
-    np.save('../data/office/dslr_label', webcam_label)
+    np.save('../data/office/amazon_surf', amazon_surf)
+    np.save('../data/office/amazon_glgcm', amazon_feature)
+    np.save('../data/office/amazon_label', amazon_label)
+    np.save('../data/office/dslr_surf', dslr_surf)
+    np.save('../data/office/dslr_glgcm', dslr_feature)
+    np.save('../data/office/dslr_label', dslr_label)
