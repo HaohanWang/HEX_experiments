@@ -177,20 +177,52 @@ def loadDataSentiment(corr=0.8):
    
     return Xtrain, Ytrain, Xval, Yval, Xtest, Ytest
 
+def columnWiseNormalize(X):
+    # col_norm = 1.0/np.sqrt((1.0/X.shape[0])*np.diag(np.dot(X.T, X)))
+    # return np.dot(X, np.diag(col_norm))
+    [n, p] = X.shape
+    col_norm = np.ones(X.shape[1])
+    for i in range(p):
+        s = (1.0/n)*np.dot(X[:, i].T, X[:,i])
+        if s != 0:
+            col_norm[i] = 1.0/np.sqrt(s)
+            X[:, i] = X[:,i]*col_norm[i]
+    return X
+
 def loadDataOffice_features(testCase=0):
-    webcam_surf = np.load('../data/office/webcam_surf.npy')
+    webcam_surf = np.load('../data/office/webcam_surf.npy').astype(float)
     webcam_glgcm = np.load('../data/office/webcam_glgcm.npy')
     webcam_label = np.load('../data/office/webcam_label.npy')
-    amazon_surf = np.load('../data/office/amazon_surf.npy')
+    amazon_surf = np.load('../data/office/amazon_surf.npy').astype(float)
     amazon_glgcm = np.load('../data/office/amazon_glgcm.npy')
     amazon_label = np.load('../data/office/amazon_label.npy')
-    dslr_surf = np.load('../data/office/dslr_surf.npy')
+    dslr_surf = np.load('../data/office/dslr_surf.npy').astype(float)
     dslr_glgcm = np.load('../data/office/dslr_glgcm.npy')
     dslr_label = np.load('../data/office/dslr_label.npy')
 
     webcam_glgcm = webcam_glgcm.reshape([webcam_glgcm.shape[0], webcam_glgcm.shape[2]])
     amazon_glgcm = amazon_glgcm.reshape([amazon_glgcm.shape[0], amazon_glgcm.shape[2]])
     dslr_glgcm = dslr_glgcm.reshape([dslr_glgcm.shape[0], dslr_glgcm.shape[2]])
+
+    # surfMax = max([np.max(np.max(webcam_surf)), np.max(np.max(amazon_surf)), np.max(np.max(dslr_surf))])
+    # glgcmMax = max([np.max(np.max(webcam_glgcm)), np.max(np.max(amazon_glgcm)), np.max(np.max(dslr_glgcm))])
+
+    # webcam_surf = webcam_surf/surfMax
+    # webcam_glgcm = webcam_glgcm/glgcmMax
+    # amazon_surf = amazon_surf/surfMax
+    # amazon_glgcm = amazon_glgcm/glgcmMax
+    # dslr_surf = dslr_surf/surfMax
+    # dslr_glgcm = dslr_glgcm/glgcmMax
+
+    webcam_surf = columnWiseNormalize(webcam_surf)
+    webcam_glgcm = columnWiseNormalize(webcam_glgcm)
+    amazon_surf = columnWiseNormalize(amazon_surf)
+    amazon_glgcm = columnWiseNormalize(amazon_glgcm)
+    dslr_surf = columnWiseNormalize(dslr_surf)
+    dslr_glgcm = columnWiseNormalize(dslr_glgcm)
+
+    # print webcam_surf[0,:]
+    # print webcam_glgcm[0,:]
 
     if testCase == 0:
         print 'DSLR to test'

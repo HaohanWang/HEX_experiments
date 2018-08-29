@@ -107,7 +107,16 @@ class MLP(object):
 
             # y_conv_loss = generatingWeightMatrix(y_conv_H, y_conv_loss, self.e, conf.div, self.batch)
 
-            y_conv_loss = y_conv_loss - tf.matmul(tf.matmul(tf.matmul(y_conv_H, tf.matrix_inverse(tf.matmul(y_conv_H, y_conv_H, transpose_a=True))), y_conv_H, transpose_b=True), y_conv_loss)
+            # I1 = checkInformation(y_conv_loss, self.e, self.batch)
+            #
+            # I2 = checkInformation(y_conv_H, self.e, self.batch)
+
+            y_conv_loss = y_conv_loss - \
+                          tf.matmul(tf.matmul(tf.matmul(y_conv_H, tf.matrix_inverse(tf.matmul(y_conv_H, y_conv_H, transpose_a=True))), y_conv_H, transpose_b=True), y_conv_loss)
+
+            # I3 = checkInformation(y_conv_loss, self.e, self.batch)
+
+            # y_conv_loss = tf.matmul(I1, tf.matmul(I2, tf.matmul(I3, y_conv_loss)))
 
             self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=self.y, logits=y_conv_loss))
 

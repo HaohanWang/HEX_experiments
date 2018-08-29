@@ -87,10 +87,10 @@ def train(args, trainX, trainZ, trainY, valX, valZ, valY, testX, testZ, testY, u
         model = MLP(x, y, z, args, Hex_flag=use_hex)
 
         # optimizer = tf.train.AdamOptimizer(1e-4).minimize(model.loss)
-        optimizer = tf.train.AdamOptimizer(1e-3)
+        optimizer = tf.train.AdamOptimizer(5e-4)
         first_train_op = optimizer.minimize(model.loss)
-        second_train_vars=tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"fc2")
-        second_train_op = optimizer.minimize(model.loss, var_list=second_train_vars)
+        # second_train_vars=tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"fc2")
+        # second_train_op = optimizer.minimize(model.loss, var_list=second_train_vars)
         """ reuse """
         #tf.get_variable_scope().reuse_variables()
 
@@ -257,7 +257,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     tf.set_random_seed(100)
-    np.random.seed(100)
+    # np.random.seed(100)
 
     if not os.path.exists(args.ckpt_dir):
             os.makedirs(args.ckpt_dir)
