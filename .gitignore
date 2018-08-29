@@ -9,3 +9,4 @@ data/*
 *ckpts*
 images/*
 test/*
+results/*
