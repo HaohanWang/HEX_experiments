@@ -177,6 +177,61 @@ def loadDataSentiment(corr=0.8):
    
     return Xtrain, Ytrain, Xval, Yval, Xtest, Ytest
 
+def loadDataOffice_features(testCase=0):
+    webcam_surf = np.load('../data/office/webcam_surf.npy')
+    webcam_glgcm = np.load('../data/office/webcam_glgcm.npy')
+    webcam_label = np.load('../data/office/webcam_label.npy')
+    amazon_surf = np.load('../data/office/amazon_surf.npy')
+    amazon_glgcm = np.load('../data/office/amazon_glgcm.npy')
+    amazon_label = np.load('../data/office/amazon_label.npy')
+    dslr_surf = np.load('../data/office/dslr_surf.npy')
+    dslr_glgcm = np.load('../data/office/dslr_glgcm.npy')
+    dslr_label = np.load('../data/office/dslr_label.npy')
+
+    webcam_glgcm = webcam_glgcm.reshape([webcam_glgcm.shape[0], webcam_glgcm.shape[2]])
+    amazon_glgcm = amazon_glgcm.reshape([amazon_glgcm.shape[0], amazon_glgcm.shape[2]])
+    dslr_glgcm = dslr_glgcm.reshape([dslr_glgcm.shape[0], dslr_glgcm.shape[2]])
+
+    if testCase == 0:
+        print 'DSLR to test'
+        trainVal_surf = np.append(webcam_surf, amazon_surf, 0)
+        trainVal_glgcm = np.append(webcam_glgcm, amazon_glgcm, 0)
+        trainVal_label = np.append(webcam_label, amazon_label)
+        test_surf = dslr_surf
+        test_glgcm = dslr_glgcm
+        test_label = dslr_label
+    elif testCase == 1:
+        print 'AMAZON to test'
+        trainVal_surf = np.append(webcam_surf, dslr_surf, 0)
+        trainVal_glgcm = np.append(webcam_glgcm, dslr_glgcm, 0)
+        trainVal_label = np.append(webcam_label, dslr_label)
+        test_surf = amazon_surf
+        test_glgcm = amazon_glgcm
+        test_label = amazon_label
+    else:
+        print 'Webcam to test'
+        trainVal_surf = np.append(amazon_surf, dslr_surf, 0)
+        trainVal_glgcm = np.append(amazon_glgcm, dslr_glgcm, 0)
+        trainVal_label = np.append(amazon_label, dslr_label)
+        test_surf = webcam_surf
+        test_glgcm = webcam_glgcm
+        test_label = webcam_label
+
+    n_trainVal = trainVal_surf.shape[0]
+    n_train = int(n_trainVal*0.6)
+    indices = np.random.permutation(n_trainVal)
+    train_surf = trainVal_surf[indices[:n_train], :]
+    val_surf = trainVal_surf[indices[n_train:], :]
+    train_glgcm = trainVal_glgcm[indices[:n_train], :]
+    val_glgcm = trainVal_glgcm[indices[n_train:], :]
+    train_label = trainVal_label[indices[:n_train]]
+    val_label= trainVal_label[indices[n_train:]]
+
+    train_label = oneHotRepresentation(train_label, 31)
+    val_label = oneHotRepresentation(val_label, 31)
+    test_label = oneHotRepresentation(test_label, 31)
+
+    return train_surf, train_glgcm, train_label, val_surf, val_glgcm, val_label, test_surf, test_glgcm, test_label
 
 def loadDataMNIST():
     f = open('../data/mnist_uniform.pkl', 'rb')

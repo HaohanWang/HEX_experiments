@@ -1,0 +1,1 @@
+python run_mlp.py -c status/ -e 100 -re 0 -hex 0 -save status/ -tc 0 -div 100
