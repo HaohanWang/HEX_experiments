@@ -50,20 +50,22 @@ def plot_mean_and_CI(mean, lb, ub, color_mean=None, color_shading=None):
     # plot the mean on top
     plt.plot(mean, color_mean)
 
-def plot():
-    tr1, val1, te1 = loadTxt('vanilla_9')
-    tr2, val2, te2 = loadTxt('hex_9')
+def plot(corr=0):
+    tr1, val1, te1 = loadTxt('vanilla_'+str(corr))
+    tr2, val2, te2 = loadTxt('hex_'+str(corr))
 
-    plot_mean_and_CI(np.mean(tr1, 0), np.mean(tr1, 0)-np.std(tr1,0)/5, np.mean(tr1, 0)+np.std(tr1,0)/5, color_mean='b--', color_shading='c')
-    plot_mean_and_CI(np.mean(te1, 0), np.mean(te1, 0)-np.std(te1,0)/5, np.mean(te1, 0)+np.std(te1,0)/5, color_mean='b', color_shading='c')
-    plot_mean_and_CI(np.mean(val1, 0), np.mean(val1, 0)-np.std(val1,0)/5, np.mean(val1, 0)+np.std(val1,0)/5, color_mean='b.', color_shading='c')
+    plot_mean_and_CI(np.mean(tr1, 0), np.mean(tr1, 0)-np.std(tr1,0), np.mean(tr1, 0)+np.std(tr1,0), color_mean='b--', color_shading='c')
+    plot_mean_and_CI(np.mean(te1, 0), np.mean(te1, 0)-np.std(te1,0), np.mean(te1, 0)+np.std(te1,0), color_mean='b', color_shading='c')
+    plot_mean_and_CI(np.mean(val1, 0), np.mean(val1, 0)-np.std(val1,0), np.mean(val1, 0)+np.std(val1,0), color_mean='b.', color_shading='c')
 
-    plot_mean_and_CI(np.mean(tr2, 0), np.mean(tr2, 0)-np.std(tr2,0)/5, np.mean(tr2, 0)+np.std(tr2,0)/5, color_mean='r--', color_shading='m')
-    plot_mean_and_CI(np.mean(te2, 0), np.mean(te2, 0)-np.std(te2,0)/5, np.mean(te2, 0)+np.std(te2,0)/5, color_mean='r', color_shading='m')
-    plot_mean_and_CI(np.mean(val2, 0), np.mean(val2, 0)-np.std(val2,0)/5, np.mean(val2, 0)+np.std(val2,0)/5, color_mean='r.', color_shading='m')
+    plot_mean_and_CI(np.mean(tr2, 0), np.mean(tr2, 0)-np.std(tr2,0), np.mean(tr2, 0)+np.std(tr2,0), color_mean='r--', color_shading='m')
+    plot_mean_and_CI(np.mean(te2, 0), np.mean(te2, 0)-np.std(te2,0), np.mean(te2, 0)+np.std(te2,0), color_mean='r', color_shading='m')
+    plot_mean_and_CI(np.mean(val2, 0), np.mean(val2, 0)-np.std(val2,0), np.mean(val2, 0)+np.std(val2,0), color_mean='r.', color_shading='m')
 
     plt.legend(loc=4)
-    plt.show()
+    plt.savefig('fig_'+str(corr)+'.pdf')
+    plt.clf()
 
 if __name__ == '__main__':
-    plot()
+    for i in range(10):
+        plot(i)

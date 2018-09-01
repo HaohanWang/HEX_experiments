@@ -47,16 +47,17 @@ class MNISTcnn(object):
         with tf.variable_scope('glgcm'):
             lamda = lamda_variable([conf.ngray,1])
             theta= theta_variable([conf.ngray,1])
-            index=tf.multiply(tf.minimum(tf.maximum(tf.subtract(self.x_d,lamda),1e-5),1),tf.minimum(tf.maximum(tf.subtract(self.x_re,theta),1e-5),1))
-            g=tf.reduce_sum(index,reduction_indices=2)
+            # index=tf.multiply(tf.minimum(tf.maximum(tf.subtract(self.x_d,lamda),1e-5),1),tf.minimum(tf.maximum(tf.subtract(self.x_re,theta),1e-5),1))
+            # g=tf.reduce_sum(index,reduction_indices=2)
+            g=tf.matmul(tf.minimum(tf.maximum(tf.subtract(self.x_d,lamda),0),1),tf.minimum(tf.maximum(tf.subtract(self.x_re,theta),0),1), transpose_b=True)
             #print(g.get_shape())
 
 
         with tf.variable_scope("glgcm_fc1"):
-            #g_pool2_flat = tf.reshape(g, [-1, conf.ngray])
-            glgcm_W_fc1 = weight_variable([conf.ngray, 32])
+            g_flat = tf.reshape(g, [-1, conf.ngray*conf.ngray])
+            glgcm_W_fc1 = weight_variable([conf.ngray*conf.ngray, 32])
             glgcm_b_fc1 = bias_variable([32])
-            glgcm_h_fc1 = tf.nn.relu(tf.matmul(g, glgcm_W_fc1) + glgcm_b_fc1)
+            glgcm_h_fc1 = tf.nn.relu(tf.matmul(g_flat, glgcm_W_fc1) + glgcm_b_fc1)
         # glgcm_h_fc1_drop = tf.nn.dropout(glgcm_h_fc1, self.keep_prob)
        
         #####################################glgcm############################
@@ -147,6 +148,9 @@ class MNISTcnn(object):
             # loss = tf.sqrt(tf.reshape(tf.cast(tf.nn.softmax_cross_entropy_with_logits(labels=self.y, logits=y_conv_loss), tf.float32), [-1, 1]) + 1e-10)
 
             # y_conv_loss = generatingWeightMatrix(y_conv_H, y_conv_loss, self.e, conf.div, self.batch)
+
+            y_conv_loss = tf.nn.l2_normalize(y_conv_loss, 0)
+            y_conv_H = tf.nn.l2_normalize(y_conv_H, 0)
 
             y_conv_loss = y_conv_loss - tf.matmul(tf.matmul(tf.matmul(y_conv_H, tf.matrix_inverse(tf.matmul(y_conv_H, y_conv_H, transpose_a=True))), y_conv_H, transpose_b=True), y_conv_loss)
 
