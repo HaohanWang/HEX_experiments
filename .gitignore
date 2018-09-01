@@ -10,3 +10,5 @@ data/*
 images/*
 test/*
 results/*
+*.pdf
+
