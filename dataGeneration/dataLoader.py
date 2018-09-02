@@ -274,15 +274,19 @@ def loadDataMNIST():
 
 if __name__ == '__main__':
     
-    corr=0
-    #loadDataSentimentDiffLabel(corr=0.0)
-    #loadDataSentiment(corr=0.8)
-    while corr<=10:
-        print corr
-        loadPath='/media/haohanwang/Data/SentimentImages/background_'+str(corr) + '/'
-        savePath='../data/background_npy/npy_'+str(corr)+'/'
-        organizeSentimentData(loadFilePath=loadPath, saveFilePath=savePath)
-        corr+=1
-    # loadPath='/media/haohanwang/Info/SentimentImages/background_'+str(corr) + '/'
-    # savePath='../data/background_npy/npy_'+str(corr)+'/'
-    # organizeSentimentData(loadFilePath=loadPath, saveFilePath=savePath)
+    # corr=0
+    # while corr<=10:
+    #     print corr
+    #     loadPath='/media/haohanwang/Data/SentimentImages/background_'+str(corr) + '/'
+    #     savePath='../data/background_npy/npy_'+str(corr)+'/'
+    #     organizeSentimentData(loadFilePath=loadPath, saveFilePath=savePath)
+    #     corr+=1
+    from matplotlib import pyplot as plt
+
+    train_surf, train_glgcm, train_label, val_surf, val_glgcm, val_label, test_surf, test_glgcm, test_label = loadDataOffice_features(testCase=0)
+    plt.imshow(train_surf[:300,:])
+    plt.show()
+    plt.imshow(train_glgcm[:300,:])
+    plt.show()
+    plt.imshow(train_label[:300,:])
+    plt.show()
