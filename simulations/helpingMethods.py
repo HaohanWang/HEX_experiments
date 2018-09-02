@@ -9,7 +9,7 @@ import scipy.optimize as opt
 def generatingWeightMatrix_py(X, y):
     factor, S, U = fitting_null_py(X, y)
     # print factor
-    W = np.linalg.pinv(-np.dot(np.dot(U, np.diag(S)), U.T)*factor+np.eye(X.shape[0])) # todo: pay attention to the extra minus sign here
+    W = np.linalg.pinv(np.dot(np.dot(U, np.diag(S)), U.T)*factor+np.eye(X.shape[0]))
 
     # W = np.eye(X.shape[0])
     # W = columnWiseNormalize(W)

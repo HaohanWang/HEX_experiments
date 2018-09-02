@@ -5,7 +5,7 @@ from numpy import linalg
 
 
 class Lasso:
-    def __init__(self, lam=1., lr=1., tol=1e-10, logistic=False):
+    def __init__(self, lam=1., lr=1., tol=1e-5, logistic=False):
         self.lam = lam
         self.lr = lr
         self.tol = tol
@@ -79,7 +79,7 @@ class Lasso:
             t = 1. / (1 + np.exp(-np.dot(X, self.beta)))
             y = np.zeros_like(t)
             y[t>0.5] = 1
-            return t
+            return y
 
     def getBeta(self):
         self.beta = self.beta.reshape(self.beta.shape[0])

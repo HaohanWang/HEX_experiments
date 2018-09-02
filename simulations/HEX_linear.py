@@ -5,9 +5,14 @@ from numpy import linalg
 from scipy import linalg as scialg
 from helpingMethods import generatingWeightMatrix_py
 
+def pred(X, b):
+    t = 1. / (1 + np.exp(-np.dot(X, b)))
+    y = np.zeros_like(t)
+    y[t>0.5] = 1
+    return y
 
 class Hex_linear:
-    def __init__(self, lam=1., lr=1., tol=1e-10, logistic=False, ignoringIndex = 100, hex_start=100, project=False):
+    def __init__(self, lam=1., lr=1., tol=1e-5, logistic=False, ignoringIndex = 100, hex_start=100, project=False):
         self.lam = lam
         self.lr = lr
         self.tol = tol
@@ -44,10 +49,14 @@ class Hex_linear:
 
             if hex_flag or (self.project and step>0):
                 if not self.project:
-                    W = generatingWeightMatrix_py(np.dot(X[:,self.ignoringIndex:], self.beta[self.ignoringIndex:]), y.reshape([y.shape[0], 1]))
+                    # W = generatingWeightMatrix_py(pred(X[:,self.ignoringIndex:], self.beta[self.ignoringIndex:]), y.reshape([y.shape[0], 1]))
+                    # W = generatingWeightMatrix_py(np.dot(X[:,self.ignoringIndex:], self.beta[self.ignoringIndex:]), y.reshape([y.shape[0], 1]))
+                    W = generatingWeightMatrix_py(X[:,self.ignoringIndex:], y.reshape([y.shape[0], 1]))
                     W_half = np.real(scialg.sqrtm(W))
                 else:
-                    T = np.dot(X[:,self.ignoringIndex:], self.beta[self.ignoringIndex:])
+                    # T = pred(X[:,self.ignoringIndex:], self.beta[self.ignoringIndex:])
+                    # T = np.dot(X[:,self.ignoringIndex:], self.beta[self.ignoringIndex:])
+                    T = X[:,self.ignoringIndex:]
                     W_half = np.eye(shp[0]) - np.dot(T, np.dot(np.linalg.inv(np.dot(T.T, T)), T.T))
 
                 Xproj = np.dot(W_half, X)
