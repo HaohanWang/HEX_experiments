@@ -195,27 +195,59 @@ def get_OFFICE_31_features():
 
     return webcam_surf, webcam_feature, webcam_label, amazon_surf, amazon_feature, amazon_label, dslr_surf, dslr_feature, dslr_label
 
+def organizeFeatures(dataSet):
+    imgs = np.load('../data/office/numpyData/'+dataSet+'.npy')
+    # resnetFeature = np.load('../data/office/numpyData/'+dataSet+'_feature.npy')
+    # labels = np.load('../data/office/numpyData/'+dataSet+'_label.npy')
+
+    glgcmResults = []
+    for i in range(imgs.shape[0]):
+        # print imgs[i][0][0]
+        gray_image = cv2.cvtColor(imgs[i].astype(np.uint8), cv2.COLOR_BGR2GRAY)
+        g = glgcm(gray_image, 15, 15)
+        glgcmResults.append(g.reshape([256]))
+    glgcmResults = np.array(glgcmResults)
+    np.save('../data/office/numpyData/' + dataSet + '_glgcm.npy', glgcmResults)
+
+def checkDimension(dataSet):
+    imgs = np.load('../data/office/numpyData/'+dataSet+'.npy')
+    resnetFeature = np.load('../data/office/numpyData/'+dataSet+'_feature.npy')
+    labels = np.load('../data/office/numpyData/'+dataSet+'_label.npy')
+
+    print imgs.shape
+    print resnetFeature.shape
+    print labels.shape
+
+
 
 if __name__ == '__main__':
-    webcam_surf, webcam_feature, webcam_label, amazon_surf, amazon_feature, amazon_label, dslr_surf, dslr_feature, dslr_label = get_OFFICE_31_features()
-    print webcam_surf.shape
-    print amazon_surf.shape
-    print dslr_surf.shape
+    # webcam_surf, webcam_feature, webcam_label, amazon_surf, amazon_feature, amazon_label, dslr_surf, dslr_feature, dslr_label = get_OFFICE_31_features()
+    # print webcam_surf.shape
+    # print amazon_surf.shape
+    # print dslr_surf.shape
+    #
+    # print webcam_feature.shape
+    # print amazon_feature.shape
+    # print dslr_feature.shape
+    #
+    # print webcam_label.shape
+    # print amazon_label.shape
+    # print dslr_label.shape
+    #
+    # np.save('../data/office/webcam_surf', webcam_surf)
+    # np.save('../data/office/webcam_glgcm', webcam_feature)
+    # np.save('../data/office/webcam_label', webcam_label)
+    # np.save('../data/office/amazon_surf', amazon_surf)
+    # np.save('../data/office/amazon_glgcm', amazon_feature)
+    # np.save('../data/office/amazon_label', amazon_label)
+    # np.save('../data/office/dslr_surf', dslr_surf)
+    # np.save('../data/office/dslr_glgcm', dslr_feature)
+    # np.save('../data/office/dslr_label', dslr_label)
 
-    print webcam_feature.shape
-    print amazon_feature.shape
-    print dslr_feature.shape
+    organizeFeatures('amazon')
+    organizeFeatures('dslr')
+    organizeFeatures('webcam')
 
-    print webcam_label.shape
-    print amazon_label.shape
-    print dslr_label.shape
-
-    np.save('../data/office/webcam_surf', webcam_surf)
-    np.save('../data/office/webcam_glgcm', webcam_feature)
-    np.save('../data/office/webcam_label', webcam_label)
-    np.save('../data/office/amazon_surf', amazon_surf)
-    np.save('../data/office/amazon_glgcm', amazon_feature)
-    np.save('../data/office/amazon_label', amazon_label)
-    np.save('../data/office/dslr_surf', dslr_surf)
-    np.save('../data/office/dslr_glgcm', dslr_feature)
-    np.save('../data/office/dslr_label', dslr_label)
+    # checkDimension('amazon')
+    # checkDimension('dslr')
+    # checkDimension('webcam')
