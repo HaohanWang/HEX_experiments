@@ -12,9 +12,49 @@ def checkInformation_py(X, epoch, s):
     if epoch > 0:
         # print X.shape
         print X[0,:], s
-    return np.float32(X)
+    return np.float32(np.diag(np.ones(128)))
 
-def generatingWeightMatrix_py(X, y, epoch, division, batch):
+def generatingWeightMatrix_py(Xp, Xc, epoch, division, batch):
+
+    if epoch < division:
+        return np.float32(Xc)
+    else:
+        W = np.eye(Xc.shape[0]) - np.dot(Xp, np.dot(np.linalg.inv(np.dot(Xp.T, Xp)), Xp.T))
+        Xc = np.dot(Xc, W)
+        return np.float32(Xc)
+
+    # lam = 1e-2
+    #
+    # if epoch < division:
+    #     #print epoch
+    #     return np.float32(0)
+    #
+    # p_pred = np.argmax(X, 1)
+    # p_prob = np.max(X, 1)
+    #
+    # c_pred = np.argmax(y, 1)
+    # c_prob = np.max(y, 1)
+    #
+    # # corr = np.dot(p_pred-np.mean(p_pred), c_pred-np.mean(c_pred))/(np.std(p_pred)*np.std(c_pred)*(X.shape[0]))
+    #
+    # a = np.zeros(X.shape[0])
+    #
+    # a[p_pred==c_pred] = 1
+    # # print np.mean(a),
+    # accu = np.mean(a)
+    # print accu,
+    # a[p_pred==c_pred] = c_prob[p_pred==c_pred]**2
+    # # if batch == 0:
+    # #     print a
+    # if accu <=1.0/7 or np.isnan(accu):
+    #     return np.float32(np.ones(X.shape[0]))
+    # a += 1/accu
+    # a = 1.0/a
+    #
+    # a = (a/np.sum(a))*X.shape[0]
+    # return np.float32(a)
+
+def generatingWeightMatrix_py2(X, y, epoch, division, batch):
 
     # print np.linalg.matrix_rank(X), '\t', np.linalg.matrix_rank(y),
     # for i in range(10):
@@ -105,14 +145,14 @@ def fitting_null_py(X, y):
     ldeltamax = 5
     numintervals=500
 
-    # X = X.reshape([X.shape[0], 1])
-    X = columnWiseNormalize(X)
-    xmean = np.mean(X, 0)
-    X = X - xmean
+    X = X.reshape([X.shape[0], 1])
+    # X = columnWiseNormalize(X)
+    # xmean = np.mean(X, 0)
+    # X = X - xmean
     y = np.argmax(y, axis=1)
-    y = y - np.mean(y)
+    # y = y - np.mean(y)
     y = y.reshape([y.shape[0], 1])
-    y = columnWiseNormalize(y)
+    # y = columnWiseNormalize(y)
 
     # print y.T
 
@@ -178,20 +218,3 @@ def nLLeval(ldelta, Uy, S, REML=False):
         pass
 
     return nLL
-
-if __name__ == '__main__':
-    from dataGeneration.dataGeneration import *
-    X = dataGeneration_SNP(n=500, p=1000)
-    X = discreteMapping(X)
-    from matplotlib import pyplot as plt
-    # print np.corrcoef(X.T)
-    plt.imshow(X)
-    plt.show()
-    # X = np.random.random([500, 1000])
-    b = np.zeros([1000, 1])
-    for i in range(100):
-        b[i] = np.random.random()
-    y = np.dot(X, b)
-    y = binary_transform(y)
-    y = y.reshape([y.shape[0], 1])
-    fitting_null_py(X, y)
