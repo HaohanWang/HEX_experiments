@@ -51,7 +51,7 @@ def plot_mean_and_CI(mean, lb, ub, color_mean=None, color_shading=None):
     plt.plot(mean, color_mean)
 
 def plot(corr=0):
-    tr1, val1, te1 = loadTxt('vanilla_'+str(corr))
+    tr1, val1, te1 = loadTxt('baseline_'+str(corr))
     tr2, val2, te2 = loadTxt('hex_'+str(corr))
 
     plot_mean_and_CI(np.mean(tr1, 0), np.mean(tr1, 0)-np.std(tr1,0), np.mean(tr1, 0)+np.std(tr1,0), color_mean='b--', color_shading='c')
@@ -63,7 +63,7 @@ def plot(corr=0):
     plot_mean_and_CI(np.mean(val2, 0), np.mean(val2, 0)-np.std(val2,0), np.mean(val2, 0)+np.std(val2,0), color_mean='r.', color_shading='m')
 
     plt.legend(loc=4)
-    plt.savefig('fig_'+str(corr)+'.pdf')
+    plt.savefig('sentiment_'+str(corr)+'.pdf')
     plt.clf()
 
 if __name__ == '__main__':

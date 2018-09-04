@@ -59,7 +59,8 @@ class MNISTcnn(object):
             glgcm_b_fc1 = bias_variable([32])
             glgcm_h_fc1 = tf.nn.relu(tf.matmul(g_flat, glgcm_W_fc1) + glgcm_b_fc1)
         # glgcm_h_fc1_drop = tf.nn.dropout(glgcm_h_fc1, self.keep_prob)
-       
+
+        glgcm_h_fc1 = tf.nn.l2_normalize(glgcm_h_fc1, 0)
         #####################################glgcm############################
         ######################################hex#############################
         # H = glgcm_h_fc1
@@ -93,6 +94,7 @@ class MNISTcnn(object):
 
             # h_fc1 = checkInformation(h_fc1, self.e)
 
+            h_fc1 = tf.nn.l2_normalize(h_fc1, 0)
             # dropout
             h_fc1_drop = tf.nn.dropout(h_fc1, self.keep_prob)
 
