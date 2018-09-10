@@ -45,9 +45,9 @@ def oneHotRepresentation(y):
 def distance(i,j,w,h,r):
     dis=np.sqrt((i-14)**2+(j-14)**2)
     if dis<r:
-        return 1.0
-    else:
         return 0.0
+    else:
+        return 1.0
 
 def distance2(i,j,w,h,r=14.0,l=0):
     if l == 0:
@@ -272,7 +272,7 @@ def mask_radial_MM(isGray=True):  # 产生一个滤波矩阵
     mask = np.zeros((28,28)) # 创建全是1的与原图大小相同的矩阵
     for i in range(28):
         for j in range(28):
-            mask[i,j]=distance(i,j,28,28,r=7)
+            mask[i,j]=distance(i,j,28,28,r=3.5)
     # 区域大小取决于rate
     return mask
 
@@ -289,8 +289,8 @@ def addMultiDomainPattern(r, l, testCase, testingFlag=False, randomMask=None, ra
         else:
             return addingPattern(r, radioMask)
     else:
-        if l < 5:
-        # if np.random.random() < 0.5:
+        # if l < 5:
+        if np.random.random() < 0.5:
             k = 1
         else:
             k = 2
@@ -366,5 +366,5 @@ def loadMultiDomainMNISTData(testCase=1):
 #change_cifar10_random()
 #change_cifar100_random()
 if __name__ == '__main__':
-    loadMultiDomainMNISTData(testCase=0)
+    loadMultiDomainMNISTData(testCase=2)
 
