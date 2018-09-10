@@ -20,10 +20,10 @@ def fftImage(x):
     return r
 
 def lamda_variable(shape):
-    initializer = tf.random_uniform_initializer(dtype=tf.float32, minval=0, maxval=16)
+    initializer = tf.truncated_normal_initializer(dtype=tf.float32, stddev=1e-1)
     return tf.get_variable("lamda", shape,initializer=initializer, dtype=tf.float32)
 def theta_variable(shape):
-    initializer = tf.random_uniform_initializer(dtype=tf.float32, minval=0, maxval=16)
+    initializer = tf.truncated_normal_initializer(dtype=tf.float32, stddev=1e-1)
     return tf.get_variable("theta", shape,initializer=initializer, dtype=tf.float32)
 def generatingWeightMatrix(images, labels, epoch, division, batch):
     W = py_func(generatingWeightMatrix_py, [images, labels, epoch, division, batch], [tf.float32])[0]
