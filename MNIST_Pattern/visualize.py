@@ -11,7 +11,7 @@ def loadTxt(filename):
     for i in range(5):
         updateTest = True
         maxVal = 0
-        text = [line.strip() for line in open('../results/MNIST_Pattern_Confound/'+ filename + '_' + str(i) + '.txt')]
+        text = [line.strip() for line in open('../results/MNIST_Pattern/'+ filename + '_' + str(i) + '.txt')]
         tr = []
         val = []
         te = []
@@ -63,7 +63,7 @@ def plot(corr=0):
     plot_mean_and_CI(np.mean(val2, 0), np.mean(val2, 0)-np.std(val2,0), np.mean(val2, 0)+np.std(val2,0), color_mean='r.', color_shading='m')
 
     plt.legend(loc=4)
-    plt.savefig('MNIST_Pattern_Confound_'+str(corr)+'.pdf')
+    plt.savefig('MNIST_Pattern_'+str(corr)+'.pdf')
     plt.clf()
 
 if __name__ == '__main__':

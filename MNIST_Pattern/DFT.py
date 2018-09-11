@@ -289,8 +289,8 @@ def addMultiDomainPattern(r, l, testCase, testingFlag=False, randomMask=None, ra
         else:
             return addingPattern(r, radioMask)
     else:
-        # if l < 5:
-        if np.random.random() < 0.5:
+        if l < 5:
+        # if np.random.random() < 0.5:
             k = 1
         else:
             k = 2
