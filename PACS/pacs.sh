@@ -1,0 +1,1 @@
+python alex_run_rep.py -c status/ -e 100 -re 0 -corr 0 -hex 0 -save status/ -row 0 -col 1 -ng 16 -div 100 -test 0
