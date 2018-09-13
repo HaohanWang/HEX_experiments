@@ -9,10 +9,10 @@ import scipy.optimize as opt
 Wlist = []
 
 def checkInformation_py(X, epoch, s, y):
-    if epoch > 2:
+    if epoch > 0:
         # print X.shape
         print X[0,:], np.argmax(y[0,:]), s
-    return np.float32(np.diag(np.ones(128)))
+    return np.float32(np.diag(np.ones(64)))
 
 def generatingWeightMatrix_py(Xp, Xc, epoch, division, batch):
 
