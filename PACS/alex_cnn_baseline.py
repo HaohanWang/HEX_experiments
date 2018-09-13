@@ -167,6 +167,7 @@ class MNISTcnn(object):
         #h_fc1_drop = tf.nn.dropout(h_fc1, self.keep_prob)
         h_fc1_drop = dropout7
 
+        self.rep = fc7
 
         # fc2
         with tf.variable_scope("fc2"):

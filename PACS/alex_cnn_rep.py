@@ -4,19 +4,19 @@ import tensorflow as tf
 from tensorflow import py_func
 from Model.helpingFunctions_v2 import generatingWeightMatrix_py, checkInformation_py
 def lamda_variable(shape):
-    initializer = tf.random_uniform_initializer(dtype=tf.float32, minval=0, maxval=16)
+    initializer = tf.random_uniform_initializer(dtype=tf.float32, minval=0, maxval=shape[0])
     return tf.get_variable("lamda", shape,initializer=initializer, dtype=tf.float32)
 
 def theta_variable(shape):
-    initializer = tf.random_uniform_initializer(dtype=tf.float32, minval=0, maxval=16)
+    initializer = tf.random_uniform_initializer(dtype=tf.float32, minval=0, maxval=shape[0])
     return tf.get_variable("theta", shape,initializer=initializer, dtype=tf.float32)
 
 def generatingWeightMatrix(images, labels, epoch, division, batch):
     W = py_func(generatingWeightMatrix_py, [images, labels, epoch, division, batch], [tf.float32])
     return W
 
-def checkInformation(rep, epoch, s):
-    X = py_func(checkInformation_py, [rep, epoch, s], [tf.float32])
+def checkInformation(rep, epoch, s, y):
+    X = py_func(checkInformation_py, [rep, epoch, s, y], [tf.float32])[0]
     return X
 
 def weight_variable(shape):
@@ -124,7 +124,7 @@ class MNISTcnn(object):
         self.keep_prob = tf.placeholder(tf.float32)
         self.e=tf.placeholder(tf.float32)
         self.batch=tf.placeholder(tf.float32)
-        self.WEIGHTS_PATH='weights/bvlc_alexnet.npy'
+        self.WEIGHTS_PATH='weights/pacs_sketch.npy'
         #self.WEIGHTS_PATH='/Users/hzxue/Desktop/CMU/project/artificial-pattern/src/HEX_719/PACS/PACS/bvlc_alexnet.npy'
 
         #####################glgcm#########################
@@ -259,7 +259,7 @@ class MNISTcnn(object):
         for op_name in weights_dict:
 
             # Check if layer should be trained from scratch
-            if op_name != 'fc8':
+            if op_name != 'fc2':
 
                 with tf.variable_scope(op_name, reuse=True):
 

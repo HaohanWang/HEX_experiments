@@ -125,7 +125,21 @@ def train(args, use_hex=True):
         
         # optimizer = tf.train.AdamOptimizer(1e-4).minimize(model.loss)
         optimizer = tf.train.AdamOptimizer(1e-3) # default was 0.0005
-        first_train_op = optimizer.minimize(model.loss)
+        first_train_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"glgcm") + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"glgcm_fc1") \
+                           + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"fc2")
+        first_train_op = optimizer.minimize(model.loss, var_list=first_train_vars)
+        second_train_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"fc2")\
+                            # + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"conv1") + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"conv2") \
+                            # + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"conv3") + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"conv4") \
+                            # + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"conv5") + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"fc6") \
+                            # + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"fc7")
+        second_train_op = optimizer.minimize(model.loss, var_list=second_train_vars)
+        # second_train_op = optimizer.minimize(model.loss)
+
+        # train_vars=tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"glgcm") + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"glgcm_fc1") \
+        #            + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"fc2") + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"fc7") \
+        #            + tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,"fc6")
+        # first_train_op = optimizer.minimize(model.loss, var_list=train_vars)
         
         saver = tf.train.Saver(tf.trainable_variables())
 
@@ -164,14 +178,23 @@ def train(args, use_hex=True):
                 for i in range(train_batches_per_epoch):
                     batch_x, img_batch, batch_y = sess.run(next_batch) 
                     batch_xd,batch_re=preparion(img_batch,args)
-                   
-                    _, acc, loss = sess.run([first_train_op, model.accuracy, model.loss], feed_dict={x: batch_x,
-                                                    x_re: batch_re, 
-                                                    x_d: batch_xd, 
-                                                    y: batch_y, 
-                                                    model.keep_prob: 0.5, 
-                                                    model.e: epoch,
-                                                    model.batch: i})
+
+                    if epoch < args.div:
+                        _, acc, loss = sess.run([first_train_op, model.accuracy, model.loss], feed_dict={x: batch_x,
+                                                        x_re: batch_re,
+                                                        x_d: batch_xd,
+                                                        y: batch_y,
+                                                        model.keep_prob: 0.5,
+                                                        model.e: epoch,
+                                                        model.batch: i})
+                    else:
+                        _, acc, loss = sess.run([second_train_op, model.accuracy, model.loss], feed_dict={x: batch_x,
+                                                        x_re: batch_re,
+                                                        x_d: batch_xd,
+                                                        y: batch_y,
+                                                        model.keep_prob: 0.5,
+                                                        model.e: epoch,
+                                                        model.batch: i})
                    
                     train_accuracies.append(acc)
                     train_losses.append(loss)

@@ -82,9 +82,12 @@ def set_path(choice):
 def train(args, use_hex=True):
         num_classes = 7
         dataroot = '../data/PACS/'
+
+        cat = 'photo'
+
         batch_size=args.batch_size
 
-        train_file, val_file, test_file=set_path('sketch') # can change
+        train_file, val_file, test_file=set_path(cat) # can change
         
         tr_data = ImageDataGenerator(train_file,
                                     dataroot=dataroot,
@@ -124,7 +127,7 @@ def train(args, use_hex=True):
         model = MNISTcnn(x, y, x_re, x_d, args, Hex_flag=use_hex)
         
         # optimizer = tf.train.AdamOptimizer(1e-4).minimize(model.loss)
-        optimizer = tf.train.AdamOptimizer(1e-3) # default was 0.0005
+        optimizer = tf.train.AdamOptimizer(1e-4) # default was 0.0005
         first_train_op = optimizer.minimize(model.loss)
         
         saver = tf.train.Saver(tf.trainable_variables())
@@ -150,6 +153,12 @@ def train(args, use_hex=True):
             train_acc=[]
             test_acc=[]
             val_acc=[]
+
+            val_rep = None
+            val_re = None
+            val_d = None
+            val_y = None
+
             for epoch in range(args.epochs): 
                     
                 begin = time.time()
@@ -161,11 +170,15 @@ def train(args, use_hex=True):
             
                 train_accuracies = []
                 train_losses = []
+                train_rep = None
+                train_re = None
+                train_d = None
+                train_y = None
                 for i in range(train_batches_per_epoch):
                     batch_x, img_batch, batch_y = sess.run(next_batch) 
                     batch_xd,batch_re=preparion(img_batch,args)
                    
-                    _, acc, loss = sess.run([first_train_op, model.accuracy, model.loss], feed_dict={x: batch_x,
+                    _, acc, loss, rep = sess.run([first_train_op, model.accuracy, model.loss, model.rep], feed_dict={x: batch_x,
                                                     x_re: batch_re, 
                                                     x_d: batch_xd, 
                                                     y: batch_y, 
@@ -175,6 +188,27 @@ def train(args, use_hex=True):
                    
                     train_accuracies.append(acc)
                     train_losses.append(loss)
+
+                    if train_rep is None:
+                        train_rep = rep
+                    else:
+                        train_rep = np.append(train_rep, rep, 0)
+
+                    if train_re is None:
+                        train_re = batch_re
+                    else:
+                        train_re = np.append(train_re, batch_re, 0)
+
+                    if train_d is None:
+                        train_d = batch_xd
+                    else:
+                        train_d = np.append(train_d, batch_xd, 0)
+
+                    if train_y is None:
+                        train_y = batch_y
+                    else:
+                        train_y = np.append(train_y, batch_y, 0)
+
                 train_acc_mean = np.mean(train_accuracies)
                 train_acc.append(train_acc_mean)
                 train_loss_mean = np.mean(train_losses)
@@ -185,15 +219,40 @@ def train(args, use_hex=True):
                 if validation:
                     sess.run(validation_init_op)
                     val_accuracies = []
+                    val_rep = None
+                    val_re = None
+                    val_d = None
+                    val_y = None
                     for i in range(val_batches_per_epoch):
                         batch_x, img_batch, batch_y = sess.run(next_batch) 
                         batch_xd,batch_re=preparion(img_batch,args)
-                        acc = sess.run(model.accuracy, feed_dict={x: batch_x, x_re:batch_re,
+                        acc, rep = sess.run([model.accuracy, model.rep], feed_dict={x: batch_x, x_re:batch_re,
                                                         x_d: batch_xd, y: batch_y, 
                                                         model.keep_prob: 1.0, 
                                                         model.e: epoch,
                                                         model.batch: i})
                         val_accuracies.append(acc)
+
+                        if val_rep is None:
+                            val_rep = rep
+                        else:
+                            val_rep = np.append(val_rep, rep, 0)
+
+                        if val_re is None:
+                            val_re = batch_re
+                        else:
+                            val_re = np.append(val_re, batch_re, 0)
+
+                        if val_d is None:
+                            val_d = batch_xd
+                        else:
+                            val_d = np.append(val_d, batch_xd, 0)
+
+                        if val_y is None:
+                            val_y = batch_y
+                        else:
+                            val_y = np.append(val_y, batch_y, 0)
+
                     val_acc_mean = np.mean(val_accuracies)
                     val_acc.append(val_acc_mean)
                     # log progress to console
@@ -208,20 +267,75 @@ def train(args, use_hex=True):
                     best_validate_accuracy = val_acc_mean
 
                     test_accuracies = []
+
+                    test_rep = None
+                    test_re = None
+                    test_d = None
+                    test_y = None
+
                     sess.run(test_init_op)
                     for i in range(test_batches_per_epoch):
 
                         batch_x, img_batch, batch_y = sess.run(next_batch)
                         batch_xd, batch_re=preparion(img_batch,args)
-                        acc = sess.run(model.accuracy, feed_dict={x: batch_x,
+                        acc, rep = sess.run([model.accuracy, model.rep], feed_dict={x: batch_x,
                                                         x_re: batch_re, x_d: batch_xd, y: batch_y,
                                                         model.keep_prob: 1.0,
                                                         model.e: epoch,
                                                         model.batch: i})
                         test_accuracies.append(acc)
+
+                        if test_rep is None:
+                            test_rep = rep
+                        else:
+                            test_rep = np.append(test_rep, rep, 0)
+
+                        if test_re is None:
+                            test_re = batch_re
+                        else:
+                            test_re = np.append(test_re, batch_re, 0)
+
+                        if test_d is None:
+                            test_d = batch_xd
+                        else:
+                            test_d = np.append(test_d, batch_xd, 0)
+
+                        if test_y is None:
+                            test_y = batch_y
+                        else:
+                            test_y = np.append(test_y, batch_y, 0)
+
                     score = np.mean(test_accuracies)
 
                     print("Best Validated Model Prediction Accuracy = %.4f " % (score))
+
+                    np.save('representations/'+cat+'_train_rep', train_rep)
+                    np.save('representations/'+cat+'_train_re', train_re)
+                    np.save('representations/'+cat+'_train_d', train_d)
+                    np.save('representations/'+cat+'_train_y', train_y)
+
+                    np.save('representations/'+cat+'_val_rep', val_rep)
+                    np.save('representations/'+cat+'_val_re', val_re)
+                    np.save('representations/'+cat+'_val_d', val_d)
+                    np.save('representations/'+cat+'_val_y', val_y)
+
+                    np.save('representations/'+cat+'_test_rep', test_rep)
+                    np.save('representations/'+cat+'_test_re', test_re)
+                    np.save('representations/'+cat+'_test_d', test_d)
+                    np.save('representations/'+cat+'_test_y', test_y)
+
+
+                    # tvars = tf.trainable_variables()
+                    # tvars_vals = sess.run(tvars)
+                    #
+                    # weights = {}
+                    # for var, val in zip(tvars, tvars_vals):
+                    #     v = var.name.split('/')[0]
+                    #     if v not in weights:
+                    #         weights[v] = []
+                    #     weights[v].append(val)
+                    # np.save('weights/pacs_sketch', weights)
+
                 test_acc.append(score)
 
                 if (epoch + 1) % 10 == 0:
@@ -245,7 +359,7 @@ def main(args):
     else:
         (n_train_acc,n_val_acc,n_test_acc)=train(args, False)
         acc=np.array((n_train_acc,n_val_acc,n_test_acc))
-        np.save(args.save+'acc_'+str(args.corr)+'_'+str(args.row)+'_'+str(args.col)++'_'+str(args.div)+'.npy',acc)
+        np.save(args.save+'acc_'+str(args.corr)+'_'+str(args.row)+'_'+str(args.col)+'_'+str(args.div)+'.npy',acc)
     #draw_all(h_train_acc,h_val_acc,h_test_acc,n_train_acc,n_val_acc,n_test_acc,corr)
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
