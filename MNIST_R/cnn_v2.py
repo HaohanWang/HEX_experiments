@@ -44,8 +44,8 @@ def max_pool_2x2(x):
 
 class MNISTcnn(object):
     def __init__(self, x, y, x_re, x_d, conf, Hex_flag=False):
-        self.x = tf.reshape(x, shape=[-1, 28, 28, 1])
-        self.x_re=tf.reshape(x_re,shape=[-1, 1, 784])
+        self.x = tf.reshape(x, shape=[-1, 16, 16, 1])
+        self.x_re=tf.reshape(x_re,shape=[-1, 1, 16*16])
         self.x_d=x_d
         self.y = y
         self.keep_prob = tf.placeholder(tf.float32)
