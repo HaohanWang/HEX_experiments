@@ -63,7 +63,8 @@ def plot(corr=0):
     plot_mean_and_CI(np.mean(val2, 0), np.mean(val2, 0)-np.std(val2,0), np.mean(val2, 0)+np.std(val2,0), color_mean='r.', color_shading='m')
 
     plt.legend(loc=4)
-    plt.savefig('MNIST_Pattern_'+str(corr)+'.pdf')
+    plt.ylim(0.4, 1.05)
+    plt.savefig('MNIST_Pattern_Confound_'+str(corr)+'.pdf')
     plt.clf()
 
 if __name__ == '__main__':
