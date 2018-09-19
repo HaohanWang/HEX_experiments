@@ -107,8 +107,7 @@ def rotateImg(x, angle):
     rotatedx = []
     for dig in x:
         rotated = imutils.rotate(dig, angle)
-        rotated = cv2.resize(rotated, (16, 16), interpolation=cv2.INTER_CUBIC)
-        rotatedx.append(rotated.reshape(16*16))
+        rotatedx.append(rotated.reshape(28*28))
     rox=np.array(rotatedx)
     return rox
 

@@ -82,9 +82,9 @@ def train(args, Xtrain, Xtrain_re,Xtrain_d,Ytrain, Xval,Xval_re, Xval_d, Yval, X
         num_class = 10
         print (Xtrain.shape, Xtrain_re.shape, Xtrain_d.shape, Xval.shape, Xval_re.shape, Xval_d.shape, Xtest.shape,Xtest_re.shape, Xtest_d.shape)
 
-        x_re = tf.placeholder(tf.float32, (None, 1,16*16))
-        x_d = tf.placeholder(tf.float32, (None,1, 16*16))
-        x = tf.placeholder(tf.float32,(None,16*16))
+        x_re = tf.placeholder(tf.float32, (None, 1,28*28))
+        x_d = tf.placeholder(tf.float32, (None,1, 28*28))
+        x = tf.placeholder(tf.float32,(None,28*28))
         y = tf.placeholder(tf.float32, (None, num_class))
         model = MNISTcnn(x, y, x_re, x_d, args, Hex_flag=use_hex)
 
@@ -226,12 +226,12 @@ def load_and_deal(corr,row,column,ngray=16, testCase=0):
     
     # deal data: get <start pixel> 
     print ("deal date with ngray=%d..." % (ngray))
-    direction=np.diag((-1)*np.ones(16*16))
-    for i in range(16*16):
-        x=int(math.floor(i/16))
-        y=int(i%16)
-        if x+row<16 and y+column<16:
-            direction[i][i+row*16+column]=1
+    direction=np.diag((-1)*np.ones(28*28))
+    for i in range(28*28):
+        x=int(math.floor(i/28))
+        y=int(i%28)
+        if x+row<28 and y+column<28:
+            direction[i][i+row*28+column]=1
 
     xtrain_d=np.copy(xtrain)
     xtrain_re=np.copy(xtrain)
@@ -255,28 +255,28 @@ def load_and_deal(corr,row,column,ngray=16, testCase=0):
 
     #xtr xva xte 中间变量
     # xtr=np.repeat(xtrain_re,ngray,0)
-    xtrain_re=xtrain_re.reshape(xtrain_re.shape[0],1,16*16)
+    xtrain_re=xtrain_re.reshape(xtrain_re.shape[0],1,28*28)
     #print (xtrain[0].shape)
 
     # xva=np.repeat(xval_re,ngray,0)
-    xval_re=xval_re.reshape(xval_re.shape[0],1,16*16)
+    xval_re=xval_re.reshape(xval_re.shape[0],1,28*28)
 
     # xte=np.repeat(xtest_re,ngray,0)
-    xtest_re=xtest_re.reshape(xtest_re.shape[0],1,16*16)
+    xtest_re=xtest_re.reshape(xtest_re.shape[0],1,28*28)
 
     ################# delta ################
     # xtr_d=np.repeat(xtrain_d,ngray,0)
-    xtrain_d=xtrain_d.reshape(xtrain_d.shape[0],1,16*16)
+    xtrain_d=xtrain_d.reshape(xtrain_d.shape[0],1,28*28)
     #print (xtr_d.shape)
     #print(xtrain_d.shape)
     
     # xva_d=np.repeat(xval_d,ngray,0)
-    xval_d=xval_d.reshape(xval_d.shape[0],1,16*16)
+    xval_d=xval_d.reshape(xval_d.shape[0],1,28*28)
     #print (xva_d.shape)
     #print (xval_d.shape)
     
     # xte_d=np.repeat(xtest_d,ngray,0)
-    xtest_d=xtest_d.reshape(xtest_d.shape[0],1,16*16)
+    xtest_d=xtest_d.reshape(xtest_d.shape[0],1,28*28)
     ################# delta ################
     
     return xtrain, xtrain_re, xtrain_d, ytrain, xval, xval_re, xval_d, yval, xtest, xtest_re, xtest_d, ytest
