@@ -4,14 +4,14 @@ import numpy as np
 
 from matplotlib import pyplot as plt
 
-def loadTxt(filename):
+def loadTxt(path_filename):
     TR = []
     VAL = []
     TE = []
     for i in range(5):
         updateTest = True
         maxVal = 0
-        text = [line.strip() for line in open('../results/MNIST_Pattern/'+ filename + '_' + str(i) + '.txt')]
+        text = [line.strip() for line in open(path_filename + '_' + str(i) + '.txt')]
         tr = []
         val = []
         te = []
@@ -67,6 +67,68 @@ def plot(corr=0):
     plt.savefig('MNIST_Pattern_Confound_'+str(corr)+'.pdf')
     plt.clf()
 
+def resultPlot():
+    boxColors = ['darkkhaki', 'royalblue']
+
+    fig = plt.figure(dpi=350, figsize=(25, 4))
+    axs = [0 for i in range(10)]
+
+    fileNames = ['baseline', 'vanilla', 'mlp', 'hex']
+    labelNames = ['B', 'G', 'M', 'H']
+
+    plt.style.use('bmh')
+
+    for i in range(6):
+        axs[i] = fig.add_axes([0.05+i*0.15, 0.1, 0.12, 0.8])
+
+        ts = []
+        if i < 3:
+            for k in range(len(fileNames)):
+                tr, val, te = loadTxt('../results/MNIST_Pattern/'+ fileNames[k]+'_'+str(i))
+                ts.append(te[:,-1])
+        else:
+            for k in range(len(fileNames)):
+                tr, val, te = loadTxt('../results/MNIST_Pattern_Confound/'+ fileNames[k]+'_'+str(i%3))
+                ts.append(te[:,-1])
+
+        # m1 = np.mean(r1)
+        # s1 = np.std(r1)
+        # m2 = np.mean(r2)
+        # s2 = np.std(r2)
+
+        # axs[c].errorbar(x=[0, 1], y=[m1, m2], yerr=[s1, s2])
+
+        axs[i].boxplot(ts, positions=[j for j in range(len(fileNames))], widths=[0.5 for j in range(len(fileNames))])
+        # axs[c].boxplot(r2, positions=[1])
+
+        axs[i].set_xlim(-0.5, len(fileNames)-0.5)
+        axs[i].set_ylim(0.4, 1.1)
+
+        if i == 0:
+            axs[i].set_ylabel('Accuracy')
+        axs[i].set_xticklabels(labelNames)
+        # if c1 == 0:
+        # axs[c].set_xticks([0, 1], ['NN', 'HEX-NN'])
+        # else:
+        #     axs[c].get_xaxis().set_visible(False)
+        if i == 0:
+            axs[i].title.set_text('original, independent')
+        elif i == 1:
+            axs[i].title.set_text('random, independent')
+        elif i == 2:
+            axs[i].title.set_text('radial, independent')
+        elif i == 3:
+            axs[i].title.set_text('original, dependent')
+        elif i == 4:
+            axs[i].title.set_text('random, dependent')
+        elif i == 5:
+            axs[i].title.set_text('radial, dependent')
+
+
+    # plt.legend(loc="upper center", bbox_to_anchor=(1, 1), fancybox=True, ncol=2)
+    plt.savefig('fig.pdf', dpi=350, format='pdf')
+
 if __name__ == '__main__':
-    for i in range(3):
-        plot(i)
+    # for i in range(3):
+    #     plot(i)
+    resultPlot()

@@ -4,6 +4,8 @@ import numpy as np
 
 from matplotlib import pyplot as plt
 
+plt.style.use('bmh')
+
 def loadTxt(filename):
     print 'loading', filename
     TR = []
@@ -78,7 +80,59 @@ def plot(corr=0):
     plt.clf()
 
 
+def resultPlot():
+    boxColors = ['darkkhaki', 'royalblue']
+
+    fig = plt.figure(dpi=350, figsize=(25, 8))
+    axs = [0 for i in range(10)]
+
+    fileNames = ['baseline', 'vanilla', 'mlp', 'hex']
+    labelNames = ['B', 'G', 'M', 'H']
+
+    plt.style.use('bmh')
+
+    for i in range(10):
+        if i < 5:
+            m = 1
+            z = i%5
+        else:
+            m = 0
+            z = i%5
+        axs[i] = fig.add_axes([0.05+z*0.18, 0.05+m*0.45, 0.16, 0.4])
+
+        ts = []
+        for k in range(len(fileNames)):
+            tr, val, te = loadTxt(fileNames[k]+'_'+str(i))
+            ts.append(te[:,-1])
+
+        # m1 = np.mean(r1)
+        # s1 = np.std(r1)
+        # m2 = np.mean(r2)
+        # s2 = np.std(r2)
+
+        # axs[c].errorbar(x=[0, 1], y=[m1, m2], yerr=[s1, s2])
+
+        axs[i].boxplot(ts, positions=[j for j in range(len(fileNames))], widths=[0.5 for j in range(len(fileNames))])
+        # axs[c].boxplot(r2, positions=[1])
+
+        axs[i].set_xlim(-0.5, len(fileNames)-0.5)
+        axs[i].set_ylim(0.5, 1.1)
+
+        if i == 0 or i == 5:
+            axs[i].set_ylabel('Accuracy')
+        axs[i].set_xticklabels(labelNames)
+        # if c1 == 0:
+        # axs[c].set_xticks([0, 1], ['NN', 'HEX-NN'])
+        # else:
+        #     axs[c].get_xaxis().set_visible(False)
+
+        axs[i].title.set_text(r'$\rho$: '+str(i/float(10)))
+
+    # plt.legend(loc="upper center", bbox_to_anchor=(1, 1), fancybox=True, ncol=2)
+    plt.savefig('fig.pdf', dpi=350, format='pdf')
+
 
 if __name__ == '__main__':
-    for i in range(10):
-        plot(i)
+    # for i in range(10):
+    #     plot(i)
+    resultPlot()
