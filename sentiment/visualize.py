@@ -86,8 +86,8 @@ def resultPlot():
     fig = plt.figure(dpi=350, figsize=(25, 8))
     axs = [0 for i in range(10)]
 
-    fileNames = ['baseline', 'vanilla', 'mlp', 'hex']
-    labelNames = ['B', 'G', 'M', 'H']
+    fileNames = ['baseline',  'mlp', 'vanilla','hex']
+    labelNames = ['B', 'M', 'N', 'H']
 
     plt.style.use('bmh')
 
