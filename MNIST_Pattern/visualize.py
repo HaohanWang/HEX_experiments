@@ -43,6 +43,47 @@ def loadTxt(path_filename):
 
     return TR, VAL, TE
 
+def loadTxtNew(path_filename):
+    TR = []
+    VAL = []
+    TE = []
+    for i in range(5):
+        updateTest = True
+        maxVal = 0
+        text = [line.strip() for line in open(path_filename+ '_' + str(i) + '.txt')]
+        tr = []
+        val = []
+        te = []
+        startUpdate = False
+        for line in text:
+            if line.startswith('Start'):
+                startUpdate = True
+            if startUpdate:
+                if line.startswith('Epoch'):
+                    items = line.split()
+                    tr.append(float(items[8][:-1]))
+                    val.append(float(items[-1]))
+                    if len(val) == 0:
+                        updateTest = True
+                    else:
+                        if val[-1] > maxVal:
+                            updateTest = True
+                            maxVal = val[-1]
+                        else:
+                            te.append(te[-1])
+                if line.startswith('Best'):
+                    if updateTest:
+                        te.append(float(line.split()[-1]))
+
+        TR.append(tr)
+        VAL.append(val)
+        TE.append(te[:-1])
+    TR = np.array(TR)
+    VAL = np.array(VAL)
+    TE = np.array(TE)
+
+    return TR, VAL, TE
+
 def plot_mean_and_CI(mean, lb, ub, color_mean=None, color_shading=None):
     # plot the shaded range of the confidence intervals
     plt.fill_between(range(mean.shape[0]), ub, lb,
@@ -73,8 +114,10 @@ def resultPlot():
     fig = plt.figure(dpi=350, figsize=(25, 4))
     axs = [0 for i in range(10)]
 
-    fileNames = ['baseline',  'mlp', 'vanilla','hex']
-    labelNames = ['B', 'M', 'N', 'H']
+    newFiles = ['pre', 'info']
+
+    fileNames = ['baseline',  'mlp', 'vanilla','hex', 'pre', 'info']
+    labelNames = ['B', 'M', 'N', 'H', 'A', 'I']
 
     plt.style.use('bmh')
 
@@ -84,11 +127,17 @@ def resultPlot():
         ts = []
         if i < 3:
             for k in range(len(fileNames)):
-                tr, val, te = loadTxt('../results/MNIST_Pattern/'+ fileNames[k]+'_'+str(i))
+                if fileNames[k] in newFiles:
+                    tr, val, te = loadTxtNew('../results/MNIST_Pattern/'+ fileNames[k]+'_'+str(i))
+                else:
+                    tr, val, te = loadTxt('../results/MNIST_Pattern/'+ fileNames[k]+'_'+str(i))
                 ts.append(te[:,-1])
         else:
             for k in range(len(fileNames)):
-                tr, val, te = loadTxt('../results/MNIST_Pattern_Confound/'+ fileNames[k]+'_'+str(i%3))
+                if fileNames[k] in newFiles:
+                    tr, val, te = loadTxtNew('../results/MNIST_Pattern_Confound/'+ fileNames[k]+'_'+str(i%3))
+                else:
+                    tr, val, te = loadTxt('../results/MNIST_Pattern_Confound/'+ fileNames[k]+'_'+str(i%3))
                 ts.append(te[:,-1])
 
         # m1 = np.mean(r1)
