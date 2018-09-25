@@ -4,6 +4,14 @@ import numpy as np
 
 from matplotlib import pyplot as plt
 
+import matplotlib
+
+font = {'family' : 'normal',
+        'weight' : 'bold',
+        'size'   : 18}
+
+matplotlib.rc('font', **font)
+
 def loadTxt(path_filename):
     TR = []
     VAL = []
@@ -111,7 +119,7 @@ def plot(corr=0):
 def resultPlot():
     boxColors = ['darkkhaki', 'royalblue']
 
-    fig = plt.figure(dpi=350, figsize=(25, 4))
+    fig = plt.figure(dpi=350, figsize=(25, 5))
     axs = [0 for i in range(10)]
 
     newFiles = ['pre', 'info']
@@ -122,7 +130,7 @@ def resultPlot():
     plt.style.use('bmh')
 
     for i in range(6):
-        axs[i] = fig.add_axes([0.05+i*0.15, 0.1, 0.12, 0.8])
+        axs[i] = fig.add_axes([0.1+i*0.15, 0.1, 0.12, 0.7])
 
         ts = []
         if i < 3:
@@ -151,7 +159,7 @@ def resultPlot():
         # axs[c].boxplot(r2, positions=[1])
 
         axs[i].set_xlim(-0.5, len(fileNames)-0.5)
-        axs[i].set_ylim(0.4, 1.1)
+        axs[i].set_ylim(0, 1.1)
 
         if i == 0:
             axs[i].set_ylabel('Accuracy')
@@ -161,17 +169,17 @@ def resultPlot():
         # else:
         #     axs[c].get_xaxis().set_visible(False)
         if i == 0:
-            axs[i].title.set_text('original, independent')
+            axs[i].title.set_text('original\nindependent')
         elif i == 1:
-            axs[i].title.set_text('random, independent')
+            axs[i].title.set_text('random\nindependent')
         elif i == 2:
-            axs[i].title.set_text('radial, independent')
+            axs[i].title.set_text('radial\nindependent')
         elif i == 3:
-            axs[i].title.set_text('original, dependent')
+            axs[i].title.set_text('original\ndependent')
         elif i == 4:
-            axs[i].title.set_text('random, dependent')
+            axs[i].title.set_text('random\ndependent')
         elif i == 5:
-            axs[i].title.set_text('radial, dependent')
+            axs[i].title.set_text('radial\ndependent')
 
 
     # plt.legend(loc="upper center", bbox_to_anchor=(1, 1), fancybox=True, ncol=2)
