@@ -4,6 +4,15 @@ import numpy as np
 
 from matplotlib import pyplot as plt
 
+import matplotlib
+
+font = {'family' : 'normal',
+        'weight' : 'bold',
+        'size'   : 18}
+
+matplotlib.rc('font', **font)
+
+
 plt.style.use('bmh')
 
 def loadTxt(filename):
@@ -125,7 +134,7 @@ def plot(corr=0):
 def resultPlot():
     boxColors = ['darkkhaki', 'royalblue']
 
-    fig = plt.figure(dpi=350, figsize=(25, 8))
+    fig = plt.figure(dpi=350, figsize=(25, 9))
     axs = [0 for i in range(10)]
 
     newFiles = ['pre', 'info']
@@ -142,7 +151,7 @@ def resultPlot():
         else:
             m = 0
             z = i%5
-        axs[i] = fig.add_axes([0.05+z*0.18, 0.05+m*0.45, 0.16, 0.4])
+        axs[i] = fig.add_axes([0.1+z*0.18, 0.1+m*0.45, 0.16, 0.35])
 
         ts = []
         for k in range(len(fileNames)):
