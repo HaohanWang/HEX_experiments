@@ -90,7 +90,7 @@ def loadTxtNew(filename):
 
         TR.append(tr)
         VAL.append(val)
-        TE.append(te[:-1])
+        TE.append(te[:100])
     TR = np.array(TR)
     VAL = np.array(VAL)
     TE = np.array(TE)
@@ -139,8 +139,8 @@ def resultPlot():
 
     newFiles = ['pre', 'info']
 
-    fileNames = ['baseline',  'mlp', 'vanilla','hex', 'pre', 'info']
-    labelNames = ['B', 'M', 'N', 'H', 'A', 'I']
+    fileNames = ['baseline',  'mlp', 'vanilla', 'adv', 'hex', 'pre', 'info']
+    labelNames = ['B', 'M', 'N', 'A', 'H', 'D', 'I']
 
     plt.style.use('bmh')
 
@@ -151,7 +151,7 @@ def resultPlot():
         else:
             m = 0
             z = i%5
-        axs[i] = fig.add_axes([0.1+z*0.18, 0.1+m*0.45, 0.16, 0.35])
+        axs[i] = fig.add_axes([0.075+z*0.18, 0.1+m*0.45, 0.16, 0.35])
 
         ts = []
         for k in range(len(fileNames)):
@@ -176,6 +176,7 @@ def resultPlot():
 
         if i == 0 or i == 5:
             axs[i].set_ylabel('Accuracy')
+
         axs[i].set_xticklabels(labelNames)
         # if c1 == 0:
         # axs[c].set_xticks([0, 1], ['NN', 'HEX-NN'])
