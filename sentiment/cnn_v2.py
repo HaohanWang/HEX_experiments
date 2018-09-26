@@ -151,8 +151,8 @@ class MNISTcnn(object):
 
             # y_conv_loss = generatingWeightMatrix(y_conv_H, y_conv_loss, self.e, conf.div, self.batch)
 
-            y_conv_loss = tf.nn.l2_normalize(y_conv_loss, 0)
-            y_conv_H = tf.nn.l2_normalize(y_conv_H, 0)
+            # y_conv_loss = tf.nn.l2_normalize(y_conv_loss, 0)
+            # y_conv_H = tf.nn.l2_normalize(y_conv_H, 0)
 
             y_conv_loss = y_conv_loss - tf.matmul(tf.matmul(tf.matmul(y_conv_H, tf.matrix_inverse(tf.matmul(y_conv_H, y_conv_H, transpose_a=True))), y_conv_H, transpose_b=True), y_conv_loss)
 
