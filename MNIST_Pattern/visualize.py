@@ -124,13 +124,13 @@ def resultPlot():
 
     newFiles = ['pre', 'info']
 
-    fileNames = ['baseline',  'mlp', 'vanilla','hex', 'pre', 'info']
-    labelNames = ['B', 'M', 'N', 'H', 'A', 'I']
+    fileNames = ['baseline',  'mlp', 'vanilla', 'adv', 'hex', 'pre', 'info']
+    labelNames = ['B', 'M', 'N', 'A', 'H', 'G', 'I']
 
     plt.style.use('bmh')
 
     for i in range(6):
-        axs[i] = fig.add_axes([0.1+i*0.15, 0.1, 0.12, 0.7])
+        axs[i] = fig.add_axes([0.075+i*0.15, 0.1, 0.12, 0.7])
 
         ts = []
         if i < 3:
