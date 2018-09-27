@@ -105,30 +105,59 @@ def plot_mean_and_CI(mean, lb, ub, color_mean=None, color_shading=None):
     plt.plot(mean, color_mean)
 
 def plot(corr=0):
+    plt.style.use('bmh')
     tr1, val1, te1 = loadTxt('baseline_'+str(corr))
     tr2, val2, te2 = loadTxt('vanilla_'+str(corr))
     tr3, val3, te3 = loadTxt('mlp_'+str(corr))
+    tr4, val4, te4 = loadTxt('adv_'+str(corr))
     tr0, val0, te0 = loadTxt('hex_'+str(corr))
+    tr5, val5, te5 = loadTxtNew('pre_'+str(corr))
+    tr6, val6, te6 = loadTxtNew('info_'+str(corr))
 
-    plot_mean_and_CI(np.mean(tr1, 0), np.mean(tr1, 0)-np.std(tr1,0)/5.0, np.mean(tr1, 0)+np.std(tr1,0)/5.0, color_mean='b--', color_shading='b')
-    plot_mean_and_CI(np.mean(te1, 0), np.mean(te1, 0)-np.std(te1,0)/5.0, np.mean(te1, 0)+np.std(te1,0)/5.0, color_mean='b', color_shading='b')
-    plot_mean_and_CI(np.mean(val1, 0), np.mean(val1, 0)-np.std(val1,0)/5.0, np.mean(val1, 0)+np.std(val1,0)/5.0, color_mean='b.', color_shading='b')
+    # plot_mean_and_CI(np.mean(tr1, 0), np.mean(tr1, 0)-np.std(tr1,0)/5.0, np.mean(tr1, 0)+np.std(tr1,0)/5.0, color_mean='g--', color_shading='g')
+    plot_mean_and_CI(np.mean(te1, 0), np.mean(te1, 0)-np.std(te1,0), np.mean(te1, 0)+np.std(te1,0), color_mean='g', color_shading='g')
+    # plot_mean_and_CI(np.mean(val1, 0), np.mean(val1, 0)-np.std(val1,0)/5.0, np.mean(val1, 0)+np.std(val1,0)/5.0, color_mean='g.', color_shading='g')
 
-    plot_mean_and_CI(np.mean(tr2, 0), np.mean(tr2, 0)-np.std(tr2,0)/5.0, np.mean(tr2, 0)+np.std(tr2,0)/5.0, color_mean='y--', color_shading='y')
-    plot_mean_and_CI(np.mean(te2, 0), np.mean(te2, 0)-np.std(te2,0)/5.0, np.mean(te2, 0)+np.std(te2,0)/5.0, color_mean='y', color_shading='y')
-    plot_mean_and_CI(np.mean(val2, 0), np.mean(val2, 0)-np.std(val2,0)/5.0, np.mean(val2, 0)+np.std(val2,0)/5.0, color_mean='y.', color_shading='y')
+    # plot_mean_and_CI(np.mean(tr2, 0), np.mean(tr2, 0)-np.std(tr2,0)/5.0, np.mean(tr2, 0)+np.std(tr2,0)/5.0, color_mean='b--', color_shading='b')
+    plot_mean_and_CI(np.mean(te2, 0), np.mean(te2, 0)-np.std(te2,0), np.mean(te2, 0)+np.std(te2,0), color_mean='b', color_shading='b')
+    # plot_mean_and_CI(np.mean(val2, 0), np.mean(val2, 0)-np.std(val2,0)/5.0, np.mean(val2, 0)+np.std(val2,0)/5.0, color_mean='b.', color_shading='b')
 
-    plot_mean_and_CI(np.mean(tr3, 0), np.mean(tr3, 0)-np.std(tr3,0)/5.0, np.mean(tr3, 0)+np.std(tr3,0)/5.0, color_mean='g--', color_shading='g')
-    plot_mean_and_CI(np.mean(te3, 0), np.mean(te3, 0)-np.std(te3,0)/5.0, np.mean(te3, 0)+np.std(te3,0)/5.0, color_mean='g', color_shading='g')
-    plot_mean_and_CI(np.mean(val3, 0), np.mean(val3, 0)-np.std(val3,0)/5.0, np.mean(val3, 0)+np.std(val3,0)/5.0, color_mean='g.', color_shading='g')
+    # plot_mean_and_CI(np.mean(tr3, 0), np.mean(tr3, 0)-np.std(tr3,0)/5.0, np.mean(tr3, 0)+np.std(tr3,0)/5.0, color_mean='c--', color_shading='c')
+    plot_mean_and_CI(np.mean(te3, 0), np.mean(te3, 0)-np.std(te3,0), np.mean(te3, 0)+np.std(te3,0), color_mean='c', color_shading='c')
+    # plot_mean_and_CI(np.mean(val3, 0), np.mean(val3, 0)-np.std(val3,0)/5.0, np.mean(val3, 0)+np.std(val3,0)/5.0, color_mean='c.', color_shading='c')
 
-    plot_mean_and_CI(np.mean(tr0, 0), np.mean(tr0, 0)-np.std(tr0,0)/5.0, np.mean(tr0, 0)+np.std(tr0,0)/5.0, color_mean='r--', color_shading='r')
-    plot_mean_and_CI(np.mean(te0, 0), np.mean(te0, 0)-np.std(te0,0)/5.0, np.mean(te0, 0)+np.std(te0,0)/5.0, color_mean='r', color_shading='r')
-    plot_mean_and_CI(np.mean(val0, 0), np.mean(val0, 0)-np.std(val0,0)/5.0, np.mean(val0, 0)+np.std(val0,0)/5.0, color_mean='r.', color_shading='r')
+    # plot_mean_and_CI(np.mean(tr4, 0), np.mean(tr4, 0)-np.std(tr4,0)/5.0, np.mean(tr4, 0)+np.std(tr4,0)/5.0, color_mean='m--', color_shading='m')
+    plot_mean_and_CI(np.mean(te4, 0), np.mean(te4, 0)-np.std(te4,0), np.mean(te4, 0)+np.std(te4,0), color_mean='m', color_shading='m')
+    # plot_mean_and_CI(np.mean(val4, 0), np.mean(val4, 0)-np.std(val4,0)/5.0, np.mean(val4, 0)+np.std(val4,0)/5.0, color_mean='m.', color_shading='m')
+
+    # plot_mean_and_CI(np.mean(tr0, 0), np.mean(tr0, 0)-np.std(tr0,0)/5.0, np.mean(tr0, 0)+np.std(tr0,0)/5.0, color_mean='r--', color_shading='r')
+    plot_mean_and_CI(np.mean(te0, 0), np.mean(te0, 0)-np.std(te0,0), np.mean(te0, 0)+np.std(te0,0), color_mean='r', color_shading='r')
+    # plot_mean_and_CI(np.mean(val0, 0), np.mean(val0, 0)-np.std(val0,0)/5.0, np.mean(val0, 0)+np.std(val0,0)/5.0, color_mean='r.', color_shading='r')
+
+    # plot_mean_and_CI(np.mean(tr5, 0), np.mean(tr5, 0)-np.std(tr5,0)/5.0, np.mean(tr5, 0)+np.std(tr5,0)/5.0, color_mean='y--', color_shading='y')
+    plot_mean_and_CI(np.mean(te5, 0), np.mean(te5, 0)-np.std(te5,0), np.mean(te5, 0)+np.std(te5,0), color_mean='y', color_shading='y')
+    # plot_mean_and_CI(np.mean(val5, 0), np.mean(val5, 0)-np.std(val5,0)/5.0, np.mean(val5, 0)+np.std(val5,0)/5.0, color_mean='y.', color_shading='y')
+
+    # plot_mean_and_CI(np.mean(tr6, 0), np.mean(tr6, 0)-np.std(tr6,0)/5.0, np.mean(tr6, 0)+np.std(tr6,0)/5.0, color_mean='k--', color_shading='k')
+    plot_mean_and_CI(np.mean(te6, 0), np.mean(te6, 0)-np.std(te6,0), np.mean(te6, 0)+np.std(te6,0), color_mean='k', color_shading='k')
+    # plot_mean_and_CI(np.mean(val6, 0), np.mean(val6, 0)-np.std(val6,0)/5.0, np.mean(val6, 0)+np.std(val6,0)/5.0, color_mean='k.', color_shading='k')
 
     plt.legend(loc=4)
+    plt.ylim(0,1.05)
     plt.savefig('sentiment_'+str(corr)+'.pdf')
     plt.clf()
+
+def plotLegend():
+    plt.style.use('bmh')
+    methodsName = ['Baseline', 'Ablation M', 'Ablation N', 'Adv', 'HEX', 'DANN', 'InfoDrop']
+    colors = ['g', 'c', 'b', 'm', 'r', 'y', 'k']
+
+    fig = plt.figure(dpi=350, figsize=(20, 1))
+    ax = fig.add_axes([0, 0, 0.001, 0.001])
+    for i in range(len(colors)):
+        ax.plot(xrange(10), xrange(10), label=methodsName[i], color=colors[i])
+    plt.legend(loc="upper center", bbox_to_anchor=(500, 800), ncol=7)
+    plt.savefig('legend.pdf')
 
 
 def resultPlot():
@@ -190,6 +219,7 @@ def resultPlot():
 
 
 if __name__ == '__main__':
+    plotLegend()
     # for i in range(10):
     #     plot(i)
-    resultPlot()
+    # resultPlot()
