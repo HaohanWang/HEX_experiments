@@ -4,6 +4,8 @@ This repository is for the codes that are used to generate main experiment resul
 
 Note that this repository holds the codes that can replicate the experiments. The codes may look messy (because we keep it the same as when we submit the paper) and uninformative for the usage of the main contribution of the paper. 
 
+Please see [here](https://github.com/HaohanWang/HEX_experiments/issues/1) for instructions to replicate the PACS results. 
+
 ### Clear Demonstration
 For a better demonstration of the usage of the main idea of the paper, please visit [HaohanWang/HEX](https://github.com/HaohanWang/HEX)
 
