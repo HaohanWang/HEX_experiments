@@ -370,7 +370,7 @@ if __name__ == "__main__":
     parser.add_argument('-b', '--batch_size', type=int, default=64, help='Batch size during training per GPU') # todo: default was 128
     parser.add_argument('-re', '--re', type=int, default=0, help='regularization?')
     parser.add_argument('-corr', '--corr', type=int, default=8, help='correlation')
-    parser.add_argument('-hex','--hex',type=int, default=1, help='use hex?')
+    parser.add_argument('-hex','--hex',type=int, default=0, help='use hex?')
     parser.add_argument('-save','--save',type=str, default='hex2/', help='save acc npy path?')
     parser.add_argument('-row', '--row', type=int, default=0, help='direction delta in row')
     parser.add_argument('-col', '--col', type=int, default=0, help='direction delta in column')
