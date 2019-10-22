@@ -366,7 +366,7 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--ckpt_dir', type=str, default='ckpts/', help='Directory for parameter checkpoints')
     parser.add_argument('-l', '--load_params', dest='load_params', action='store_true', help='Restore training from previous model checkpoint?')
     parser.add_argument("-o", "--output",  type=str, default='prediction.csv', help='Prediction filepath')
-    parser.add_argument('-e', '--epochs', type=int, default=25000, help='How many epochs to run in total?')
+    parser.add_argument('-e', '--epochs', type=int, default=10, help='How many epochs to run in total?')
     parser.add_argument('-b', '--batch_size', type=int, default=64, help='Batch size during training per GPU') # todo: default was 128
     parser.add_argument('-re', '--re', type=int, default=0, help='regularization?')
     parser.add_argument('-corr', '--corr', type=int, default=8, help='correlation')
